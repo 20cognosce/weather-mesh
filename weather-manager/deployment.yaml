@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vert-ikbo-24-20-weather-manager-deployment
+  labels:
+    app: weather-manager-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weather-manager-app
+  template:
+    metadata:
+      labels:
+        app: weather-manager-app
+    spec:
+      containers:
+        - name: weather-manager-container
+          image: cognosce/vert-ikbo-24-20-weather-manager-image
+          ports:
+            - containerPort: 8080

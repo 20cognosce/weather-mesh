@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vert-ikbo-24-20-circuit-breaker-deployment
+  labels:
+    app: circuit-breaker-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: circuit-breaker-app
+  template:
+    metadata:
+      labels:
+        app: circuit-breaker-app
+    spec:
+      containers:
+        - name: circuit-breaker-container
+          image: cognosce/vert-ikbo-24-20-circuit-breaker-image
+          ports:
+            - containerPort: 8080
