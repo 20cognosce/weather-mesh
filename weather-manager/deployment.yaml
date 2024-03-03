@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: weather-manager-container
-          image: cognosce/vert-ikbo-24-20-weather-manager-image
+          image: cognosce/weather-manager-image
           ports:
             - containerPort: 8080

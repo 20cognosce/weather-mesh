@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: dictionary-container
-          image: cognosce/vert-ikbo-24-20-dictionary-image
+          image: cognosce/dictionary-image
           ports:
             - containerPort: 8080

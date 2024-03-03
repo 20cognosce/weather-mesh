@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: circuit-breaker-container
-          image: cognosce/vert-ikbo-24-20-circuit-breaker-image
+          image: cognosce/circuit-breaker-image
           ports:
             - containerPort: 8080
