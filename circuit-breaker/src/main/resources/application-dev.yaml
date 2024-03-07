@@ -1,0 +1,4 @@
+hostname:
+  weather: 'localhost:8080'
+  dict: 'localhost:8081'
+  breaker: 'localhost:8082'

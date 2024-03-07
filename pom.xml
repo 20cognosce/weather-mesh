@@ -12,7 +12,7 @@
     <modules>
         <module>circuit-breaker</module>
         <module>dictionary</module>
-        <module>weather-manager</module>
+        <module>weather</module>
     </modules>
 
     <properties>

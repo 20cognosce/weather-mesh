@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "hostname.weather",
+      "type": "java.lang.String",
+      "description": "Weather service hostname."
+    },
+    {
+      "name": "hostname.dict",
+      "type": "java.lang.String",
+      "description": "Dictionary service hostname."
+    },
+    {
+      "name": "hostname.breaker",
+      "type": "java.lang.String",
+      "description": "Circuit breaker service hostname."
+    }
+  ] }

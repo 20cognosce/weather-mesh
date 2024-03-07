@@ -1,0 +1,4 @@
+hostname:
+  weather: ${weather.host}
+  dict: ${dict.host}
+  breaker: ${breaker.host}

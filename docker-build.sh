@@ -10,7 +10,7 @@ cp ./dictionary/Dockerfile .
 docker build . -t dictionary-image
 rm Dockerfile
 
-# weather-manager stage
-cp ./weather-manager/Dockerfile .
-docker build . -t weather-manager-image
+# weather stage
+cp ./weather/Dockerfile .
+docker build . -t weather-image
 rm Dockerfile

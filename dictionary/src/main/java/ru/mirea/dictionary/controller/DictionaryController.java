@@ -20,4 +20,9 @@ public class DictionaryController {
 
         return ResponseEntity.ok(healthCheckMessage);
     }
+
+    @GetMapping("/info")
+    public ResponseEntity<String> getInfo() {
+        return ResponseEntity.ok("processed by dictionary service");
+    }
 }
