@@ -1,4 +1,4 @@
 hostname:
-  weather: 'localhost:8080'
-  dict: 'localhost:8081'
-  breaker: 'localhost:8082'
+  weather: 'http://localhost:8080'
+  dictionary: 'http://localhost:8081'
+  circuit-breaker: 'http://localhost:8082'

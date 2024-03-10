@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: weather-svc
+spec:
+  selector:
+    app: weather-app
+  ports:
+    - name: weather-svc-port
+      protocol: TCP
+      nodePort: 30080
+      port: 8080
+      targetPort: 8080
+  type: NodePort

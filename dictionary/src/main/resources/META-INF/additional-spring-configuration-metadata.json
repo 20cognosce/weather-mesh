@@ -6,13 +6,13 @@
       "description": "Weather service hostname."
     },
     {
-      "name": "hostname.dict",
+      "name": "hostname.dictionary",
       "type": "java.lang.String",
       "description": "Dictionary service hostname."
     },
     {
-      "name": "hostname.breaker",
+      "name": "hostname.circuit-breaker",
       "type": "java.lang.String",
-      "description": "Circuit breaker service hostname."
+      "description": "Circuit Breaker service hostname."
     }
   ] }

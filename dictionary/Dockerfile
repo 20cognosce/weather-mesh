@@ -1,16 +1,17 @@
-ARG SERVICE=dictionary
+ARG APP=dictionary
 
 FROM maven:3.8.5-openjdk-17 AS build-stage
-ARG SERVICE
+ARG APP
 WORKDIR /weather-mesh
 COPY pom.xml pom.xml
 COPY /circuit-breaker ./circuit-breaker
 COPY /dictionary ./dictionary
 COPY /weather ./weather
-RUN mvn clean install -DskipTests=true -pl :${SERVICE}
+RUN mvn clean install -DskipTests=true -pl :${APP}
 
 FROM eclipse-temurin:17.0.10_7-jre-jammy
-ARG SERVICE
-COPY --from=build-stage /weather-mesh/${SERVICE}/target/${SERVICE}-1.0.0.jar /opt/${SERVICE}.jar
-EXPOSE 8082
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "/opt/${SERVICE}.jar"]
+ARG APP
+ENV APP_VAR=$APP
+COPY --from=build-stage /weather-mesh/${APP_VAR}/target/${APP_VAR}-1.0.0.jar /opt/${APP_VAR}.jar
+EXPOSE 8081
+ENTRYPOINT java -jar -Dspring.profiles.active=prod /opt/${APP_VAR}.jar

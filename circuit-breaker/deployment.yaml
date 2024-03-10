@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vert-ikbo-24-20-circuit-breaker-deployment
+  name: circuit-breaker-deployment
   labels:
     app: circuit-breaker-app
 spec:
@@ -19,3 +19,6 @@ spec:
           image: cognosce/circuit-breaker-image
           ports:
             - containerPort: 8080
+          env:
+            - name: PROTOCOL
+              value: http

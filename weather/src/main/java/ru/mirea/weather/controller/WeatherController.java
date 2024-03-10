@@ -14,8 +14,8 @@ import java.time.temporal.ChronoUnit;
 @RestController
 public class WeatherController {
 
-    @Value("${hostname.dict}")
-    private String hostnameDict;
+    @Value("${hostname.dictionary}")
+    private String dictionaryServiceHost;
 
     @GetMapping("/health")
     public ResponseEntity<String> getHealthCheck() {
@@ -31,7 +31,7 @@ public class WeatherController {
         RestClient restClient = RestClient.create();
 
         String dictionaryServiceReply = restClient.get()
-                .uri("http://" + hostnameDict + "/dictionary/info")
+                .uri(dictionaryServiceHost + "/dictionary/info")
                 .retrieve()
                 .body(String.class);
 
