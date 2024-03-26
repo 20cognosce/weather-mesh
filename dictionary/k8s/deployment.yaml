@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: circuit-breaker-deployment
+  name: dictionary-deployment
   labels:
-    app: circuit-breaker-app
+    app: dictionary-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: circuit-breaker-app
+      app: dictionary-app
   template:
     metadata:
       labels:
-        app: circuit-breaker-app
+        app: dictionary-app
     spec:
       containers:
-        - name: circuit-breaker-container
-          image: cognosce/circuit-breaker-image
+        - name: dictionary-container
+          image: cognosce/dictionary-image
           ports:
-            - containerPort: 8080
+              - containerPort: 8081
           env:
             - name: PROTOCOL
               value: http

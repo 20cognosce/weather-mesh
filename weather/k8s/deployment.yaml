@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dictionary-deployment
+  name: weather-deployment
   labels:
-    app: dictionary-app
+    app: weather-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: dictionary-app
+      app: weather-app
   template:
     metadata:
       labels:
-        app: dictionary-app
+        app: weather-app
     spec:
       containers:
-        - name: dictionary-container
-          image: cognosce/dictionary-image
+        - name: weather-container
+          image: cognosce/weather-image
           ports:
-            - containerPort: 8081
+              - containerPort: 8080
           env:
             - name: PROTOCOL
               value: http

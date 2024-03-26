@@ -1,5 +1,24 @@
-<b><p>> bash docker-build.sh
-<b><p>> bash docker-push.sh
-<b><p>> minikube start --cpus 4 --memory 8192
-<b><p>> minikube dashboard
-<b><p>> bash kube-apply.sh
+<h2> Docker build & push </h2>
+
+> bash docker-build.sh
+> 
+> bash docker-push.sh
+
+<h2> App installation </h2>
+
+> minikube start --cpus 8 --memory 8192
+> 
+<i>loadbalancer necessary for ingress, execute in separate terminal</i>
+> minikube tunnel
+>
+<i>applying app manifests</i>
+> bash kube-apply.sh
+
+<h2> Istio installation </h2>
+
+> cd istio-1.21.0
+> 
+> export PATH=$PWD/bin:$PATH
+> 
+<i>and finally</i>
+> bash istio-apply.sh

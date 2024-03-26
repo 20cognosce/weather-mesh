@@ -6,9 +6,8 @@ spec:
   selector:
     app: circuit-breaker-app
   ports:
-    - name: circuit-breaker-svc-port
+    - name: http-breaker
       protocol: TCP
-      nodePort: 30082
       port: 8082
       targetPort: 8082
-  type: NodePort
+  type: ClusterIP

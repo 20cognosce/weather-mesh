@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: weather-deployment
+  name: circuit-breaker-deployment
   labels:
-    app: weather-app
+    app: circuit-breaker-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: weather-app
+      app: circuit-breaker-app
   template:
     metadata:
       labels:
-        app: weather-app
+        app: circuit-breaker-app
     spec:
       containers:
-        - name: weather-container
-          image: cognosce/weather-image
+        - name: circuit-breaker-container
+          image: cognosce/circuit-breaker-image
           ports:
-            - containerPort: 8080
+              - containerPort: 8080
           env:
             - name: PROTOCOL
               value: http

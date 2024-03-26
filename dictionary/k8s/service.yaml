@@ -6,9 +6,8 @@ spec:
   selector:
     app: dictionary-app
   ports:
-    - name: dict-svc-port
+    - name: http-dict
       protocol: TCP
-      # nodePort: 30081
       port: 8081
       targetPort: 8081
   type: ClusterIP

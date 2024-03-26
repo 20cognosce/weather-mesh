@@ -6,9 +6,8 @@ spec:
   selector:
     app: weather-app
   ports:
-    - name: weather-svc-port
+    - name: http-weather
       protocol: TCP
-      nodePort: 30080
       port: 8080
       targetPort: 8080
-  type: NodePort
+  type: ClusterIP
