@@ -18,7 +18,4 @@ spec:
         - name: circuit-breaker-container
           image: cognosce/circuit-breaker-image
           ports:
-              - containerPort: 8080
-          env:
-            - name: PROTOCOL
-              value: http
+              - containerPort: 8082

@@ -19,6 +19,3 @@ spec:
           image: cognosce/dictionary-image
           ports:
               - containerPort: 8081
-          env:
-            - name: PROTOCOL
-              value: http

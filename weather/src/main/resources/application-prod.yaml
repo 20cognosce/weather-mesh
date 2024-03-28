@@ -1,5 +1,4 @@
-# env variables provided by k8s
 hostname:
-  weather: ${PROTOCOL}://${WEATHER_SVC_SERVICE_HOST}:${WEATHER_SVC_SERVICE_PORT}
-  dictionary: ${PROTOCOL}://${DICTIONARY_SVC_SERVICE_HOST}:${DICTIONARY_SVC_SERVICE_PORT}
-  circuit-breaker: ${PROTOCOL}://${CIRCUIT_BREAKER_SVC_SERVICE_HOST}:${CIRCUIT_BREAKER_SVC_SERVICE_PORT}
+  weather: http://weather-svc
+  dictionary: http://dictionary-svc
+  circuit-breaker: http://circuit-breaker-svc

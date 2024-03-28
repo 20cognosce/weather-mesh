@@ -4,15 +4,13 @@ metadata:
   name: weather-virtual-svc
 spec:
   hosts:
-    - "*"
+    - '*'
   gateways:
-    - weather-gateway
+    - cluster-gateway
   http:
     - match:
         - uri:
-            prefix: /
+            prefix: /weather
       route:
         - destination:
             host: weather-svc
-            port:
-              number: 8080

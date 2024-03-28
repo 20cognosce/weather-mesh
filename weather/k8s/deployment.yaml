@@ -19,6 +19,3 @@ spec:
           image: cognosce/weather-image
           ports:
               - containerPort: 8080
-          env:
-            - name: PROTOCOL
-              value: http
