@@ -1,4 +1,4 @@
-package ru.mirea.weather.controller;
+package ru.mirea.weather;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +26,14 @@ public class WeatherController {
         return ResponseEntity.ok(healthCheckMessage);
     }
 
-    @GetMapping("/current")
+    @GetMapping("/info")
     public ResponseEntity<String> getWeather() {
         RestClient restClient = RestClient.create();
 
         String dictionaryServiceReply = restClient.get()
                 .uri(dictionaryServiceHost + "/dictionary/info")
+                .header("request-from", "weather")
+                .header("request-to", "dictionary")
                 .retrieve()
                 .body(String.class);
 
