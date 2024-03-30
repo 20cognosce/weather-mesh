@@ -4,3 +4,13 @@ server:
 spring:
   profiles:
     default: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/circuit-breaker-db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql

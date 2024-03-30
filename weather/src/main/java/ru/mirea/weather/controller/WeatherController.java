@@ -1,4 +1,4 @@
-package ru.mirea.weather;
+package ru.mirea.weather.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
+import ru.mirea.weather.dto.RequestDto;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

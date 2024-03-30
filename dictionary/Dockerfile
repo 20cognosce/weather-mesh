@@ -14,4 +14,4 @@ ARG APP
 ENV APP_VAR=$APP
 COPY --from=build-stage /weather-mesh/${APP_VAR}/target/${APP_VAR}-1.0.0.jar /opt/${APP_VAR}.jar
 EXPOSE 8081
-ENTRYPOINT java -jar -Dspring.profiles.active=prod /opt/${APP_VAR}.jar
+ENTRYPOINT java -jar -Dspring.profiles.active=prod -Duser.timezone=Europe/Moscow /opt/${APP_VAR}.jar

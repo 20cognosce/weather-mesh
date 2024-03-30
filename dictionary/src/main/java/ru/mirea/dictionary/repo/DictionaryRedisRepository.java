@@ -1,4 +1,4 @@
-package ru.mirea.dictionary;
+package ru.mirea.dictionary.repo;
 
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
