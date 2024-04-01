@@ -1,16 +1,30 @@
-#apiVersion: networking.istio.io/v1alpha3
-#kind: VirtualService
-#metadata:
-#  name: dictionary-virtual-svc
-#spec:
-#  hosts:
-#    - '*'
-#  http:
-#    - match:
-#        - uri:
-#            prefix: /dictionary-svc
-#      redirect:
-#        - uri: /circuit-breaker-svc
-#      route:
-#        - destination:
-#            host: circuit-breaker-svc
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: dictionary-virtual-svc
+spec:
+  hosts:
+    - dictionary-svc
+  http:
+    - match: # ATTENTION: order of matches matters - first match wins
+        - sourceLabels:
+            app: circuit-breaker-app
+      route:
+        - destination:
+            host: dictionary-svc
+    - match:
+        - uri:
+            prefix: /dictionary/options
+      rewrite:
+        uri: /circuit-breaker/processing/dictionary/options
+      route:
+        - destination:
+            host: circuit-breaker-svc
+    - match:
+        - uri:
+            prefix: /dictionary/info
+      rewrite:
+        uri: /circuit-breaker/processing/dictionary/info
+      route:
+        - destination:
+            host: circuit-breaker-svc

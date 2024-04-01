@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
+import ru.mirea.circuit.breaker.entity.util.RequestProcessingResult;
 import ru.mirea.circuit.breaker.service.CircuitBreakerService;
 import ru.mirea.dto.OptionsDto;
 import ru.mirea.dto.RequestDto;
@@ -20,9 +22,11 @@ import ru.mirea.service.UtilService;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/circuit-breaker/processing")
+@RequestMapping("/circuit-breaker/processing/dictionary")
 @RestController
 public class DictionaryProcessorController {
 
@@ -31,11 +35,15 @@ public class DictionaryProcessorController {
 
     private final CircuitBreakerService circuitBreakerService;
 
-    @PostMapping("/dict/info")
+    @PostMapping("/info")
     public ResponseEntity<ResponseDto> processInfoRequest(@RequestBody RequestDto requestDto, HttpServletRequest request) {
         logRequest(request);
+        RequestProcessingResult processingResult = circuitBreakerService.tryProcessRequest(request);
 
-        if (circuitBreakerService.tryRejectRequest(request)) {
+        if (!processingResult.getIsValid()) {
+            return ResponseEntity.of(ProblemDetail.forStatusAndDetail(BAD_REQUEST, processingResult.getDescription())).build();
+        }
+        if (!processingResult.getIsAllowed()) {
             return ResponseEntity.ok(generateCircuitBreakerResponseDto());
         }
 
@@ -50,11 +58,15 @@ public class DictionaryProcessorController {
         return ResponseEntity.ok(dictionaryServiceResponse);
     }
 
-    @GetMapping("/dict/options")
+    @GetMapping("/options")
     public ResponseEntity<OptionsDto> processOptionsRequest(HttpServletRequest request) {
         logRequest(request);
+        RequestProcessingResult processingResult = circuitBreakerService.tryProcessRequest(request);
 
-        if (circuitBreakerService.tryRejectRequest(request)) {
+        if (!processingResult.getIsValid()) {
+            return ResponseEntity.of(ProblemDetail.forStatusAndDetail(BAD_REQUEST, processingResult.getDescription())).build();
+        }
+        if (!processingResult.getIsAllowed()) {
             return ResponseEntity.ok(generateCircuitBreakerOptionsDto());
         }
 

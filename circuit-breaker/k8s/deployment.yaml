@@ -19,3 +19,14 @@ spec:
           image: cognosce/circuit-breaker-image
           ports:
               - containerPort: 8082
+        - name: postgres-db
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: circuit-breaker-db
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_USER
+              value: postgres

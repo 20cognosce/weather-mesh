@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.mirea.circuit.breaker.entity.StatusValue;
+import ru.mirea.circuit.breaker.entity.util.StatusValue;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -20,6 +20,5 @@ public class CircuitBreakerRequestDto {
     private SystemDto requestFromSystem;
     private SystemDto requestToSystem;
     private StatusValue status;
-    private PermissionDto permission;
     private LocalDateTime timestamp;
 }

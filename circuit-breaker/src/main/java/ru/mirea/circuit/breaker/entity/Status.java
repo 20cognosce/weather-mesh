@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.mirea.circuit.breaker.entity.util.StatusValue;
 
 import java.util.UUID;
 

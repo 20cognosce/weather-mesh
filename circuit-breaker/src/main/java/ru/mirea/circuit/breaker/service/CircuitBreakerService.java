@@ -10,19 +10,18 @@ import ru.mirea.circuit.breaker.entity.Audit;
 import ru.mirea.circuit.breaker.entity.CircuitBreakerRequest;
 import ru.mirea.circuit.breaker.entity.Permission;
 import ru.mirea.circuit.breaker.entity.Status;
-import ru.mirea.circuit.breaker.entity.StatusValue;
 import ru.mirea.circuit.breaker.entity.System;
+import ru.mirea.circuit.breaker.entity.util.RequestProcessingResult;
+import ru.mirea.circuit.breaker.entity.util.StatusValue;
 import ru.mirea.circuit.breaker.repo.AuditRepository;
 import ru.mirea.circuit.breaker.repo.PermissionRepository;
 import ru.mirea.circuit.breaker.repo.RequestRepository;
 import ru.mirea.circuit.breaker.repo.StatusRepository;
 import ru.mirea.circuit.breaker.repo.SystemRepository;
-import ru.mirea.service.UtilService;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,13 +36,13 @@ public class CircuitBreakerService {
     private final AuditService auditService;
 
     @Transactional
-    public Permission updatePermission(PermissionDto permissionDto, HttpServletRequest request) {
+    public Permission updatePermission(PermissionDto permissionDto, String username, HttpServletRequest request) {
         Permission permissionForUpdate = permissionRepository.findById(permissionDto.getId()).orElseThrow(); //null id -> IllegalArgumentException
         System fromSystemForUpdate = systemRepository.findByName(permissionDto.getRequestFromSystem()).orElseThrow();
         System toSystemForUpdate = systemRepository.findByName(permissionDto.getRequestToSystem()).orElseThrow();
         Status statusForUpdate = statusRepository.findByValue(permissionDto.getStatus()).orElseThrow();
 
-        Audit audit = auditService.generateAuditEvent(permissionForUpdate.getStatus(), statusForUpdate, permissionForUpdate, request);
+        Audit audit = auditService.generateAuditEvent(permissionForUpdate.getStatus(), statusForUpdate, permissionForUpdate, username, request);
 
         permissionForUpdate.setRequestFromSystem(fromSystemForUpdate);
         permissionForUpdate.setRequestToSystem(toSystemForUpdate);
@@ -55,45 +54,35 @@ public class CircuitBreakerService {
     }
 
     @Transactional
-    public boolean tryRejectRequest(HttpServletRequest request) {
-        String requestFromSystem = Optional.ofNullable(request.getHeader("request-from"))
-                .orElse(UtilService.getIpAddress(request));
-        String requestToSystem = Optional.ofNullable(request.getHeader("request-to"))
-                .orElse(UtilService.getIpAddress(request));
+    public RequestProcessingResult tryProcessRequest(HttpServletRequest request) {
+        String requestFromSystem = request.getHeader("request-from");
+        String requestToSystem = request.getHeader("request-to");
+
+        if (requestFromSystem == null || requestToSystem == null) {
+            return logAndReturnInvalid("The header 'request-from' or 'request-to' is null");
+        }
+
         List<Permission> permissionList = permissionRepository.findPermissionsBySystemNames(requestFromSystem, requestToSystem);
 
         if (permissionList.size() != 1) {
-            log.warn(String.format("No permission found for requestFromSystem: %s and requestToSystem: %s", requestFromSystem, requestToSystem));
-            saveRequest(requestFromSystem, requestToSystem, StatusValue.NOT_RECOGNIZED, null);
-            return true;
+            return logAndReturnInvalid(String.format("No permission found for requestFromSystem: %s and requestToSystem: %s", requestFromSystem, requestToSystem));
         }
 
-        var permission = permissionList.get(0);
+        Permission permission = permissionList.get(0);
 
         if (permission.getStatus().getValue() == StatusValue.FORBIDDEN) {
             saveRequest(requestFromSystem, requestToSystem, StatusValue.FORBIDDEN, permission);
-            return true;
+            return new RequestProcessingResult(true, false, String.format("Access FORBIDDEN from %s to %s", requestFromSystem, requestToSystem));
         } else {
             saveRequest(requestFromSystem, requestToSystem, StatusValue.ALLOWED, permission);
-            return false;
+            return new RequestProcessingResult(true, true, String.format("Access ALLOWED from %s to %s", requestFromSystem, requestToSystem));
         }
     }
 
-    public void saveRequest(String requestFromSystem, String requestToSystem, StatusValue value, Permission permission) {
+    private void saveRequest(String requestFromSystem, String requestToSystem, StatusValue value, Permission permission) {
         Status status = statusRepository.findByValue(value).orElseThrow();
-        System requestFrom = systemRepository
-                .findByName(requestFromSystem)
-                .orElseGet(() -> systemRepository.save(System.builder()
-                        .name(requestFromSystem)
-                        .registrationTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
-                        .registrationType("AUTOMATIC")
-                        .build()));
-        System requestTo = systemRepository
-                .findByName(requestToSystem).orElseGet(() -> systemRepository.save(System.builder()
-                        .name(requestToSystem)
-                        .registrationTime(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
-                        .registrationType("AUTOMATIC")
-                        .build()));
+        System requestFrom = systemRepository.findByName(requestFromSystem).orElseThrow();
+        System requestTo = systemRepository.findByName(requestToSystem).orElseThrow();
 
         requestRepository.save(CircuitBreakerRequest.builder()
                 .requestFromSystem(requestFrom)
@@ -102,5 +91,10 @@ public class CircuitBreakerService {
                 .permission(permission)
                 .timestamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
                 .build());
+    }
+
+    private RequestProcessingResult logAndReturnInvalid(String message) {
+        log.warn(message);
+        return new RequestProcessingResult(false, false, message);
     }
 }

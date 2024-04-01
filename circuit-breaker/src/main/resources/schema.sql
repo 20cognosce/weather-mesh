@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS audit
     old_status_id UUID         NOT NULL,
     new_status_id UUID         NOT NULL,
     permission_id UUID         NOT NULL,
-    user_agent    VARCHAR(255) NOT NULL,
+    username      VARCHAR(255) NOT NULL,
     timestamp     TIMESTAMP    NOT NULL,
     FOREIGN KEY (old_status_id) REFERENCES status (id),
     FOREIGN KEY (new_status_id) REFERENCES status (id),

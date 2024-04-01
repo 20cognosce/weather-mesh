@@ -15,7 +15,7 @@ import java.time.temporal.ChronoUnit;
 @Service
 public class AuditService {
 
-    public Audit generateAuditEvent(Status old_, Status new_, Permission permission, HttpServletRequest request) {
+    public Audit generateAuditEvent(Status old_, Status new_, Permission permission, String username, HttpServletRequest request) {
         String requestInfo = UtilService.extractRequestInfo(request);
 
         log.info(String.format("Generating audit event for request: %s", requestInfo));
@@ -23,7 +23,7 @@ public class AuditService {
                 .oldStatus(old_)
                 .newStatus(new_)
                 .permission(permission)
-                .userAgent(request.getHeader("user-agent"))
+                .username(username)
                 .timestamp(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
                 .build();
     }

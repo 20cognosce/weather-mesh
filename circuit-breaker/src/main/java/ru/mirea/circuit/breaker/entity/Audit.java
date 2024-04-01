@@ -41,8 +41,8 @@ public class Audit {
     @JoinColumn(name = "permission_id", referencedColumnName = "id")
     private Permission permission;
 
-    @Column(name = "user_agent", nullable = false)
-    private String userAgent;
+    @Column(name = "username", nullable = false)
+    private String username;
 
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;

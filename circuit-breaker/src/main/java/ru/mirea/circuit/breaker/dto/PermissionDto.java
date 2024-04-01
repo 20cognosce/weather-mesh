@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.mirea.circuit.breaker.entity.StatusValue;
+import ru.mirea.circuit.breaker.entity.util.StatusValue;
 
 import java.util.UUID;
 

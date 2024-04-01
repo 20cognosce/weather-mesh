@@ -16,24 +16,19 @@ public class CircuitBreakerMapper {
                 .id(audit.getId())
                 .oldStatus(audit.getOldStatus().getValue())
                 .newStatus(audit.getNewStatus().getValue())
-                .permission(mapPermissionToDto(audit.getPermission()))
-                .userAgent(audit.getUserAgent())
+                .username(audit.getUsername())
                 .timestamp(audit.getTimestamp())
                 .build();
     }
 
     public static CircuitBreakerRequestDto mapRequestToDto(CircuitBreakerRequest circuitBreakerRequest) {
-        var circuitBreakerRequestDto = CircuitBreakerRequestDto.builder()
+        return CircuitBreakerRequestDto.builder()
                 .id(circuitBreakerRequest.getId())
                 .requestFromSystem(CircuitBreakerMapper.mapSystemToDto(circuitBreakerRequest.getRequestFromSystem()))
                 .requestToSystem(CircuitBreakerMapper.mapSystemToDto(circuitBreakerRequest.getRequestToSystem()))
                 .status(circuitBreakerRequest.getStatus().getValue())
                 .timestamp(circuitBreakerRequest.getTimestamp())
                 .build();
-
-        if (circuitBreakerRequest.getPermission() != null)
-            circuitBreakerRequestDto.setPermission(mapPermissionToDto(circuitBreakerRequest.getPermission()));
-        return circuitBreakerRequestDto;
     }
 
     public static SystemDto mapSystemToDto(System system) {

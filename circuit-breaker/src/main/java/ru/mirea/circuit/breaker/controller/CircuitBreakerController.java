@@ -57,7 +57,7 @@ public class CircuitBreakerController {
 
         try {
             if (permissionDto.getId() == null) throw new NoSuchElementException();
-            saved = circuitBreakerService.updatePermission(permissionDto, request);
+            saved = circuitBreakerService.updatePermission(permissionDto, "localhost", request); //TODO: Implement authentication via @AuthenticationPrincipal
         } catch (NoSuchElementException e) {
             return ResponseEntity
                     .of(ProblemDetail.forStatusAndDetail(BAD_REQUEST, "Unable to update permission: incorrect parameter found"))

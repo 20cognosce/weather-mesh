@@ -19,3 +19,7 @@ spec:
           image: cognosce/dictionary-image
           ports:
               - containerPort: 8081
+        - name: redis-db
+          image: redis:latest
+          ports:
+            - containerPort: 6379
