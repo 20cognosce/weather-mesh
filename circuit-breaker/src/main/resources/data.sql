@@ -20,8 +20,8 @@ BEGIN
 IF is_table_empty(''system'') THEN
     INSERT INTO system (name, registration_time, registration_type)
     VALUES
-        (''weather'', localtimestamp, ''DEFAULT''),
-        (''dictionary'', localtimestamp, ''DEFAULT'');
+        (''weather'', localtimestamp(0), ''DEFAULT''),
+        (''dictionary'', localtimestamp(0), ''DEFAULT'');
     END IF;
 
 IF is_table_empty(''status'') THEN

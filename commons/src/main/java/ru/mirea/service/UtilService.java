@@ -1,39 +1,16 @@
-package ru.mirea.circuit.breaker.service;
+package ru.mirea.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-import ru.mirea.circuit.breaker.entity.Audit;
-import ru.mirea.circuit.breaker.entity.Permission;
-import ru.mirea.circuit.breaker.entity.Status;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
 public class UtilService {
-
     @SneakyThrows
-    public static Audit generateAuditEvent(Status old_, Status new_, Permission permission, HttpServletRequest request) {
-        String requestInfo = new ObjectMapper()
-                .writerWithDefaultPrettyPrinter()
-                .writeValueAsString(UtilService.extractRequestInfo(request));
-
-        log.info(String.format("Generating audit event for request: %s", requestInfo));
-        return Audit.builder()
-                .oldStatus(old_)
-                .newStatus(new_)
-                .permission(permission)
-                .userAgent(request.getHeader("user-agent"))
-                .timestamp(LocalDateTime.now())
-                .build();
-    }
-
-    public static Map<String, String> extractRequestInfo(HttpServletRequest request) {
+    public static String extractRequestInfo(HttpServletRequest request) {
         Map<String, String> requestMap = new HashMap<>();
 
         Enumeration<String> headerNames = request.getHeaderNames();
@@ -56,6 +33,13 @@ public class UtilService {
         requestMap.put("ContentType", request.getContentType());
         requestMap.put("ContentLength", String.valueOf(request.getContentLength()));
 
-        return Collections.unmodifiableMap(requestMap);
+        return new ObjectMapper()
+                .writerWithDefaultPrettyPrinter()
+                .writeValueAsString(requestMap);
+    }
+
+    public static String getIpAddress(HttpServletRequest request) {
+        String ipProvidedByProxy = request.getHeader("X-FORWARDED-FOR");
+        return ipProvidedByProxy == null ? request.getRemoteAddr() : ipProvidedByProxy;
     }
 }

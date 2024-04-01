@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,12 +17,14 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 @Entity
 @Table(name = "request")
-public class Request {
+public class CircuitBreakerRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;

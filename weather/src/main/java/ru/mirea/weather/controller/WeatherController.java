@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
-import ru.mirea.weather.dto.RequestDto;
+import ru.mirea.dto.OptionsDto;
+import ru.mirea.dto.RequestDto;
+import ru.mirea.dto.ResponseDto;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -30,27 +32,27 @@ public class WeatherController {
     }
 
     @PostMapping("/info")
-    public ResponseEntity<String> getDictWeatherInfo(@RequestBody RequestDto requestDto) {
-        String dictionaryServiceReply = RestClient.create().post()
+    public ResponseEntity<ResponseDto> getDictWeatherInfo(@RequestBody RequestDto requestDto) {
+        var dictionaryServiceResponse = RestClient.create().post()
                 .uri(dictionaryServiceHost + "/dictionary/info")
                 .header("request-from", "weather")
                 .header("request-to", "dictionary")
                 .body(requestDto)
                 .retrieve()
-                .body(String.class);
+                .body(ResponseDto.class);
 
-        return ResponseEntity.ok(dictionaryServiceReply);
+        return ResponseEntity.ok(dictionaryServiceResponse);
     }
 
     @GetMapping("/options")
-    public ResponseEntity<String> getDictRequestOptions() {
-        String dictionaryServiceReply = RestClient.create().get()
+    public ResponseEntity<OptionsDto> getDictRequestOptions() {
+        var dictionaryServiceResponse = RestClient.create().get()
                 .uri(dictionaryServiceHost + "/dictionary/options")
                 .header("request-from", "weather")
                 .header("request-to", "dictionary")
                 .retrieve()
-                .body(String.class);
+                .body(OptionsDto.class);
 
-        return ResponseEntity.ok(dictionaryServiceReply);
+        return ResponseEntity.ok(dictionaryServiceResponse);
     }
 }

@@ -28,5 +28,19 @@
             <artifactId>postgresql</artifactId>
             <version>42.7.3</version>
         </dependency>
+        <dependency>
+            <groupId>ru.mirea</groupId>
+            <artifactId>commons</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

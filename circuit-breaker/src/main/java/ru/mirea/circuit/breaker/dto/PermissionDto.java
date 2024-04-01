@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.mirea.circuit.breaker.entity.StatusValue;
 
 import java.util.UUID;
 
@@ -17,5 +18,5 @@ public class PermissionDto {
     private UUID id;
     private String requestFromSystem;
     private String requestToSystem;
-    private String status;
+    private StatusValue status;
 }

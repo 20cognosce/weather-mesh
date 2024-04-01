@@ -1,4 +1,4 @@
-package ru.mirea.weather.dto;
+package ru.mirea.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

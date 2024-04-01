@@ -1,5 +1,8 @@
 package ru.mirea.dictionary.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,23 +11,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mirea.dictionary.repo.DictionaryRedisRepository;
 import ru.mirea.dictionary.config.RedisSchema;
-import ru.mirea.dictionary.dto.OptionsDto;
-import ru.mirea.dictionary.dto.RequestDto;
-import ru.mirea.dictionary.dto.ResponseDto;
+import ru.mirea.dto.OptionsDto;
+import ru.mirea.dto.RequestDto;
+import ru.mirea.dto.ResponseDto;
+import ru.mirea.service.UtilService;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
+@RequiredArgsConstructor
 @RequestMapping("/dictionary")
 @RestController
 public class DictionaryController {
-    private final DictionaryRedisRepository repo;
 
-    public DictionaryController(DictionaryRedisRepository repo) {
-        this.repo = repo;
-    }
+    private final DictionaryRedisRepository repo;
 
     @GetMapping("/health")
     public ResponseEntity<String> getHealthCheck() {
@@ -36,7 +39,9 @@ public class DictionaryController {
     }
 
     @PostMapping("/info")
-    public ResponseEntity<ResponseDto> getWeatherInfo(@RequestBody RequestDto requestDto) {
+    public ResponseEntity<ResponseDto> getWeatherInfo(@RequestBody RequestDto requestDto, HttpServletRequest request) {
+        logRequest(request);
+
         if (!isRequestValid(requestDto)) {
             return ResponseEntity
                     .badRequest()
@@ -51,13 +56,16 @@ public class DictionaryController {
     }
 
     @GetMapping("/options")
-    public ResponseEntity<OptionsDto> getRequestOptions() {
+    public ResponseEntity<OptionsDto> getRequestOptions(HttpServletRequest request) {
+        logRequest(request);
+
         return ResponseEntity.ok(
                 OptionsDto.builder()
                         .options(Map.of(
                                 "city", RedisSchema.CITIES,
                                 "condition", RedisSchema.CONDITIONS,
                                 "month", RedisSchema.MONTHS))
+                        .description("Перечень доступных значений для параметров запроса /info сервиса справочных данных")
                         .build()
         );
     }
@@ -66,5 +74,11 @@ public class DictionaryController {
         return RedisSchema.CITIES.contains(req.getCity()) &&
                 RedisSchema.CONDITIONS.contains(req.getCondition()) &&
                 RedisSchema.MONTHS.contains(req.getMonth());
+    }
+
+    private void logRequest(HttpServletRequest request) {
+        log.info(String.format(
+                "Dictionary service received new request: %s",
+                UtilService.extractRequestInfo(request)));
     }
 }

@@ -4,10 +4,11 @@ FROM maven:3.8.5-openjdk-17 AS build-stage
 ARG APP
 WORKDIR /weather-mesh
 COPY pom.xml pom.xml
+COPY /commons ./commons
 COPY /circuit-breaker ./circuit-breaker
 COPY /dictionary ./dictionary
 COPY /weather ./weather
-RUN mvn clean install -DskipTests=true -pl :${APP}
+RUN mvn clean install -DskipTests=true -pl :commons -pl :${APP}
 
 FROM eclipse-temurin:17.0.10_7-jre-jammy
 ARG APP

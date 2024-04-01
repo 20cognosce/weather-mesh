@@ -2,6 +2,8 @@ package ru.mirea.circuit.breaker.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,7 +24,8 @@ public class Status {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "value", nullable = false)
-    private String value;
+    private StatusValue value;
 }
 

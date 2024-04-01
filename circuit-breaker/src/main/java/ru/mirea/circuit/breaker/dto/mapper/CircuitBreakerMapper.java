@@ -1,9 +1,11 @@
 package ru.mirea.circuit.breaker.dto.mapper;
 
 import ru.mirea.circuit.breaker.dto.AuditDto;
+import ru.mirea.circuit.breaker.dto.CircuitBreakerRequestDto;
 import ru.mirea.circuit.breaker.dto.PermissionDto;
 import ru.mirea.circuit.breaker.dto.SystemDto;
 import ru.mirea.circuit.breaker.entity.Audit;
+import ru.mirea.circuit.breaker.entity.CircuitBreakerRequest;
 import ru.mirea.circuit.breaker.entity.Permission;
 import ru.mirea.circuit.breaker.entity.System;
 
@@ -18,6 +20,20 @@ public class CircuitBreakerMapper {
                 .userAgent(audit.getUserAgent())
                 .timestamp(audit.getTimestamp())
                 .build();
+    }
+
+    public static CircuitBreakerRequestDto mapRequestToDto(CircuitBreakerRequest circuitBreakerRequest) {
+        var circuitBreakerRequestDto = CircuitBreakerRequestDto.builder()
+                .id(circuitBreakerRequest.getId())
+                .requestFromSystem(CircuitBreakerMapper.mapSystemToDto(circuitBreakerRequest.getRequestFromSystem()))
+                .requestToSystem(CircuitBreakerMapper.mapSystemToDto(circuitBreakerRequest.getRequestToSystem()))
+                .status(circuitBreakerRequest.getStatus().getValue())
+                .timestamp(circuitBreakerRequest.getTimestamp())
+                .build();
+
+        if (circuitBreakerRequest.getPermission() != null)
+            circuitBreakerRequestDto.setPermission(mapPermissionToDto(circuitBreakerRequest.getPermission()));
+        return circuitBreakerRequestDto;
     }
 
     public static SystemDto mapSystemToDto(System system) {

@@ -15,11 +15,11 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuditDto {
+public class CircuitBreakerRequestDto {
     private UUID id;
-    private StatusValue oldStatus;
-    private StatusValue newStatus;
+    private SystemDto requestFromSystem;
+    private SystemDto requestToSystem;
+    private StatusValue status;
     private PermissionDto permission;
-    private String userAgent;
     private LocalDateTime timestamp;
 }
