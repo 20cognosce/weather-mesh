@@ -1,23 +1,23 @@
 package ru.mirea.dictionary.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mirea.dictionary.repo.DictionaryRedisRepository;
+import ru.mirea.auth.AuthRole;
+import ru.mirea.auth.Role;
 import ru.mirea.dictionary.config.RedisSchema;
-import ru.mirea.dto.OptionsDto;
-import ru.mirea.dto.RequestDto;
-import ru.mirea.dto.ResponseDto;
+import ru.mirea.dictionary.repo.DictionaryRedisRepository;
+import ru.mirea.dto.DictionaryOptionsDto;
+import ru.mirea.dto.DictionaryRequestDto;
+import ru.mirea.dto.DictionaryResponseDto;
 import ru.mirea.service.UtilService;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -27,40 +27,36 @@ import java.util.Map;
 @RestController
 public class DictionaryController {
 
+    @Value("${spring.application.name}")
+    private String applicationName;
+
     private final DictionaryRedisRepository repo;
 
-    @GetMapping("/health")
-    public ResponseEntity<String> getHealthCheck() {
-        String healthCheckMessage = String.format(
-                "Dictionary service is up at %s",
-                LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-
-        return ResponseEntity.ok(healthCheckMessage);
-    }
-
+    @AuthRole(Role.SYSTEM)
     @PostMapping("/info")
-    public ResponseEntity<ResponseDto> getWeatherInfo(@RequestBody RequestDto requestDto, HttpServletRequest request) {
-        logRequest(request);
+    public ResponseEntity<DictionaryResponseDto> getDictionaryInfo(@RequestBody DictionaryRequestDto requestDto) {
+        UtilService.logRequest(applicationName);
 
         if (!isRequestValid(requestDto)) {
             return ResponseEntity
                     .badRequest()
-                    .body(new ResponseDto(null, "The request failed validation"));
+                    .body(new DictionaryResponseDto(null, "The request failed validation"));
         }
 
         List<String> result = repo.getData(requestDto.getCity(), requestDto.getCondition(), requestDto.getMonth());
-        return ResponseEntity.ok(ResponseDto.builder()
+        return ResponseEntity.ok(DictionaryResponseDto.builder()
                 .value(result.get(0))
                 .description(result.get(1))
                 .build());
     }
 
+    @AuthRole(Role.SYSTEM)
     @GetMapping("/options")
-    public ResponseEntity<OptionsDto> getRequestOptions(HttpServletRequest request) {
-        logRequest(request);
+    public ResponseEntity<DictionaryOptionsDto> getDictionaryRequestOptions() {
+        UtilService.logRequest(applicationName);
 
         return ResponseEntity.ok(
-                OptionsDto.builder()
+                DictionaryOptionsDto.builder()
                         .options(Map.of(
                                 "city", RedisSchema.CITIES,
                                 "condition", RedisSchema.CONDITIONS,
@@ -70,15 +66,9 @@ public class DictionaryController {
         );
     }
 
-    private boolean isRequestValid(RequestDto req) {
+    private boolean isRequestValid(DictionaryRequestDto req) {
         return RedisSchema.CITIES.contains(req.getCity()) &&
                 RedisSchema.CONDITIONS.contains(req.getCondition()) &&
                 RedisSchema.MONTHS.contains(req.getMonth());
-    }
-
-    private void logRequest(HttpServletRequest request) {
-        log.info(String.format(
-                "Dictionary service received new request: %s",
-                UtilService.extractRequestInfo(request)));
     }
 }

@@ -1,17 +1,17 @@
 package ru.mirea.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Builder
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestDto {
-
-    private String city;
-    private String condition;
-    private String month;
+public class AuthRequestDto {
+    String login;
+    byte[] password;
 }

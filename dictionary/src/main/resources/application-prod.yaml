@@ -2,3 +2,4 @@ hostname:
   weather: http://weather-svc
   dictionary: http://dictionary-svc
   circuit-breaker: http://circuit-breaker-svc
+  auth: http://auth-svc

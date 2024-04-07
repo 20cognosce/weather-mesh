@@ -4,6 +4,8 @@ server:
 spring:
   profiles:
     default: dev
+  application:
+    name: circuit-breaker
   datasource:
     url: jdbc:postgresql://localhost:5432/circuit-breaker-db
     username: postgres

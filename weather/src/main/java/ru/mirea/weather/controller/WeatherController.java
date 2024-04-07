@@ -1,6 +1,7 @@
 package ru.mirea.weather.controller;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,50 +9,55 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
-import ru.mirea.dto.OptionsDto;
-import ru.mirea.dto.RequestDto;
-import ru.mirea.dto.ResponseDto;
-
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import ru.mirea.auth.AuthRole;
+import ru.mirea.auth.Role;
+import ru.mirea.dto.DictionaryOptionsDto;
+import ru.mirea.dto.DictionaryRequestDto;
+import ru.mirea.dto.DictionaryResponseDto;
+import ru.mirea.service.UtilService;
 
 @RequestMapping("/weather")
 @RestController
 public class WeatherController {
 
+    @Value("${spring.application.name}")
+    private String applicationName;
+
     @Value("${hostname.dictionary}")
     private String dictionaryServiceHost;
 
-    @GetMapping("/health")
-    public ResponseEntity<String> getHealthCheck() {
-        String healthCheckMessage = String.format(
-                "Weather service is up at %s",
-                LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+    @Value("${hostname.auth}")
+    private String authServiceHost;
 
-        return ResponseEntity.ok(healthCheckMessage);
-    }
-
+    @AuthRole(Role.USER)
     @PostMapping("/info")
-    public ResponseEntity<ResponseDto> getDictWeatherInfo(@RequestBody RequestDto requestDto) {
+    public ResponseEntity<DictionaryResponseDto> getWeatherInfo(@RequestBody DictionaryRequestDto requestDto) {
+        String token = UtilService.getTokenFromAuthServiceLogin(authServiceHost, applicationName, applicationName, UtilService.readPassword());
+
         var dictionaryServiceResponse = RestClient.create().post()
                 .uri(dictionaryServiceHost + "/dictionary/info")
-                .header("request-from", "weather")
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .header("request-from", applicationName)
                 .header("request-to", "dictionary")
                 .body(requestDto)
                 .retrieve()
-                .body(ResponseDto.class);
+                .body(DictionaryResponseDto.class);
 
         return ResponseEntity.ok(dictionaryServiceResponse);
     }
 
+    @AuthRole(Role.USER)
     @GetMapping("/options")
-    public ResponseEntity<OptionsDto> getDictRequestOptions() {
+    public ResponseEntity<DictionaryOptionsDto> getWeatherRequestOptions() {
+        String token = UtilService.getTokenFromAuthServiceLogin(authServiceHost, applicationName, applicationName, UtilService.readPassword());
+
         var dictionaryServiceResponse = RestClient.create().get()
                 .uri(dictionaryServiceHost + "/dictionary/options")
-                .header("request-from", "weather")
+                .header(HttpHeaders.AUTHORIZATION, token)
+                .header("request-from", applicationName)
                 .header("request-to", "dictionary")
                 .retrieve()
-                .body(OptionsDto.class);
+                .body(DictionaryOptionsDto.class);
 
         return ResponseEntity.ok(dictionaryServiceResponse);
     }

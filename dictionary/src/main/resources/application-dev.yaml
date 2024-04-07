@@ -2,3 +2,4 @@ hostname:
   weather: 'http://localhost:8080'
   dictionary: 'http://localhost:8081'
   circuit-breaker: 'http://localhost:8082'
+  auth: 'http://localhost:8083'

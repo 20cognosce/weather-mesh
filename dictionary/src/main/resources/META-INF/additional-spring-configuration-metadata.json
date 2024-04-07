@@ -14,5 +14,10 @@
       "name": "hostname.circuit-breaker",
       "type": "java.lang.String",
       "description": "Circuit Breaker service hostname."
+    },
+    {
+      "name": "hostname.auth",
+      "type": "java.lang.String",
+      "description": "Auth service hostname."
     }
   ] }

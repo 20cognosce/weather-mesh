@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.mirea.auth.AuthRole;
+import ru.mirea.auth.Role;
 import ru.mirea.circuit.breaker.dto.AuditDto;
 import ru.mirea.circuit.breaker.dto.CircuitBreakerRequestDto;
 import ru.mirea.circuit.breaker.dto.PermissionDto;
@@ -24,8 +26,6 @@ import ru.mirea.circuit.breaker.repo.RequestRepository;
 import ru.mirea.circuit.breaker.repo.SystemRepository;
 import ru.mirea.circuit.breaker.service.CircuitBreakerService;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -42,15 +42,7 @@ public class CircuitBreakerController {
     private final SystemRepository systemRepository;
     private final PermissionRepository permissionRepository;
 
-    @GetMapping("/health")
-    public ResponseEntity<String> getHealthCheck() {
-        String healthCheckMessage = String.format(
-                "Circuit Breaker service is up at %s",
-                LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-
-        return ResponseEntity.ok(healthCheckMessage);
-    }
-
+    @AuthRole(Role.ADMIN)
     @PatchMapping("/permissions")
     public ResponseEntity<PermissionDto> updatePermission(@RequestBody PermissionDto permissionDto, HttpServletRequest request) {
         Permission saved;
@@ -68,6 +60,7 @@ public class CircuitBreakerController {
         return ResponseEntity.ok(savedDto);
     }
 
+    @AuthRole(Role.ADMIN)
     @GetMapping("/permissions")
     public ResponseEntity<List<PermissionDto>> getAllPermissions() {
         List<Permission> permissions = permissionRepository.findAll();
@@ -78,6 +71,7 @@ public class CircuitBreakerController {
         return ResponseEntity.ok(permissionsDto);
     }
 
+    @AuthRole(Role.ADMIN)
     @GetMapping("/systems")
     public ResponseEntity<List<SystemDto>> getAllSystems() {
         List<System> systems = systemRepository.findAll();
@@ -88,6 +82,7 @@ public class CircuitBreakerController {
         return ResponseEntity.ok(systemDto);
     }
 
+    @AuthRole(Role.ADMIN)
     @GetMapping("/audit")
     public ResponseEntity<List<AuditDto>> getAllAuditEvents() {
         List<Audit> auditEvents = auditRepository.findAll();
@@ -98,6 +93,7 @@ public class CircuitBreakerController {
         return ResponseEntity.ok(auditEventsDto);
     }
 
+    @AuthRole(Role.ADMIN)
     @GetMapping("/requests")
     public ResponseEntity<List<CircuitBreakerRequestDto>> getAllRequests() {
         List<CircuitBreakerRequest> circuitBreakerRequests = requestRepository.findAll();
