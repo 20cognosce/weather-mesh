@@ -15,6 +15,7 @@ import ru.mirea.dto.AuthResponseDto;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class UtilService {
                 .uri(authServiceHost + "/auth/token")
                 .header("request-from", requestFrom)
                 .header("request-to", "auth")
-                .body(new AuthRequestDto(login, password))
+                .body(new AuthRequestDto(login, byteArrayToBase64(password)))
                 .retrieve()
                 .body(String.class);
     }
@@ -84,5 +85,13 @@ public class UtilService {
     public static byte[] readPassword() {
         Path path = new ClassPathResource("password").getFile().toPath();
         return Files.readAllBytes(path);
+    }
+
+    public static String byteArrayToBase64(byte[] array) {
+        return Base64.getEncoder().encodeToString(array);
+    }
+
+    public static byte[] base64ToByteArray(String base64) {
+        return Base64.getDecoder().decode(base64);
     }
 }

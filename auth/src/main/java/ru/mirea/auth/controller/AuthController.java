@@ -27,7 +27,6 @@ public class AuthController {
 
     @PostMapping("/token")
     public ResponseEntity<String> createToken(@RequestBody AuthRequestDto requestDto) {
-        //TODO: validate login and password
         UtilService.logRequest(applicationName);
         String token = jwtTokenProvider.generateToken(requestDto);
         return ResponseEntity.ok(token);
