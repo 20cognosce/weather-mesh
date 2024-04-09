@@ -14,3 +14,8 @@ rm Dockerfile
 cp ./weather/Dockerfile .
 docker build . -t weather-image
 rm Dockerfile
+
+# auth stage
+cp ./auth/Dockerfile .
+docker build . -t auth-image
+rm Dockerfile

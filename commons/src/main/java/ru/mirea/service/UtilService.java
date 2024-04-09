@@ -12,8 +12,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import ru.mirea.dto.AuthRequestDto;
 import ru.mirea.dto.AuthResponseDto;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Enumeration;
@@ -83,8 +81,7 @@ public class UtilService {
 
     @SneakyThrows
     public static byte[] readPassword() {
-        Path path = new ClassPathResource("password").getFile().toPath();
-        return Files.readAllBytes(path);
+        return new ClassPathResource("password").getContentAsByteArray();
     }
 
     public static String byteArrayToBase64(byte[] array) {

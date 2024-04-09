@@ -1,4 +1,4 @@
-ARG APP=circuit-breaker
+ARG APP=auth
 
 FROM maven:3.8.5-openjdk-17 AS build-stage
 ARG APP

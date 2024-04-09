@@ -35,24 +35,31 @@ public class AspectAuth {
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-
         log.info("Aspect triggered on method: " + method.getName());
 
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         String authToken = request.getHeader(HttpHeaders.AUTHORIZATION);
         log.info(String.format("Retrieved '%s' header: %s", HttpHeaders.AUTHORIZATION, authToken));
 
+        if (authToken == null) {
+            return buildBadRequest();
+        }
+
         AuthResponseDto responseDto = UtilService.getAccountFromAuthServiceByToken(authServiceHost, requestFrom, authToken);
         log.info("Received response from auth service: \n" + UtilService.toJson(responseDto));
 
         AuthRole annotation = method.getAnnotation(AuthRole.class);
         if (responseDto.getRole() != annotation.value()) {
-            return ResponseEntity
-                    .of(ProblemDetail.forStatusAndDetail(BAD_REQUEST, "Invalid authorization token or insufficient role privileges"))
-                    .build();
+            return buildBadRequest();
         }
 
         log.info(String.format("Response role %s corresponds with annotation role %s successfully", responseDto.getRole(), annotation.value()));
         return joinPoint.proceed();
+    }
+
+    private ResponseEntity<String> buildBadRequest() {
+        return ResponseEntity
+                .of(ProblemDetail.forStatusAndDetail(BAD_REQUEST, "Invalid authorization token or insufficient role privileges"))
+                .build();
     }
 }

@@ -8,6 +8,7 @@ COPY /commons ./commons
 COPY /circuit-breaker ./circuit-breaker
 COPY /dictionary ./dictionary
 COPY /weather ./weather
+COPY /auth ./auth
 RUN mvn clean install -DskipTests=true -pl :commons -pl :${APP}
 
 FROM eclipse-temurin:17.0.10_7-jre-jammy

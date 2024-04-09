@@ -7,7 +7,5 @@ kubectl apply -f dictionary/k8s/service.yaml
 kubectl apply -f circuit-breaker/k8s/deployment.yaml
 kubectl apply -f circuit-breaker/k8s/service.yaml
 
-kubectl apply -f istio/cluster-gateway.yaml
-kubectl apply -f istio/weather-virtual-svc.yaml
-kubectl apply -f istio/dictionary-virtual-svc.yaml
-kubectl apply -f istio/circuit-breaker-virtual-svc.yaml
+kubectl apply -f auth/k8s/deployment.yaml
+kubectl apply -f auth/k8s/service.yaml

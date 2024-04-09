@@ -20,5 +20,5 @@
 > 
 > export PATH=$PWD/bin:$PATH
 > 
-<i>and finally</i>
+<i>and finally (needs restart of all pods for istio-proxy injection)</i>
 > bash istio-apply.sh
