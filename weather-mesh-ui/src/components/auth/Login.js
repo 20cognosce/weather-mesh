@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {Navigate} from 'react-router-dom'
 import {Button, Container, Dimmer, Form, Loader, Message, Segment} from 'semantic-ui-react'
 import AuthContext from './AuthContext'
-import {advertApi} from '../util/AdvertApi'
+import {authApi} from '../api/AuthApi'
 import {handleLogError} from '../util/ErrorHandler'
 
 class Login extends Component {
@@ -11,52 +11,56 @@ class Login extends Component {
     state = {
         login: '',
         password: '',
-        isLoggedIn: false,
+        isAuthenticated: false,
         isError: false,
         isLoading: false
     }
 
     componentDidMount() {
-        const Auth = this.context
-        const isLoggedIn = Auth.userIsAuthenticated()
-        this.setState({isLoggedIn})
+        const AuthContext = this.context
+        const isAuthenticated = AuthContext.isUserAuthenticated
+        this.setState({isAuthenticated})
     }
 
     handleInputChange = (e, {name, value}) => {
         this.setState({[name]: value})
     }
 
+    handleLogin = async (login, password) => {
+        try {
+            const tokenResponse = await authApi.getToken(login, window.btoa(password));
+            const token = tokenResponse.data;
+
+            const accountResponse = await authApi.getAccount(token);
+            const {role} = accountResponse.data;
+            if (role === 'UNAUTHORIZED') {
+                this.setState({login: '', password: '', isAuthenticated: false, isError: true});
+            } else {
+                this.context.userLogin(token, login, role);
+                this.setState({login: '', password: '', isAuthenticated: true, isError: false});
+            }
+        } catch (error) {
+            handleLogError(error);
+            this.setState({isError: true});
+        }
+    }
+
     handleSubmit = async (e) => {
         e.preventDefault()
+        const {login, password} = this.state
 
-        const {email, password} = this.state
-        if (!(email && password)) {
+        if (!(login && password)) {
             this.setState({isError: true})
             return
         }
 
         this.setState({isLoading: true})
-        await advertApi
-            .login(email, password)
-            .then(response => {
-                const {id, firstName, lastName, role} = response.data
-                const authdata = window.btoa(email + ':' + password)
-                const user = {id, firstName, lastName, role, authdata}
-
-                const Auth = this.context
-                Auth.userLogin(user)
-
-                this.setState({email: '', password: '', isLoggedIn: true, isError: false})
-            })
-            .catch(error => {
-                handleLogError(error)
-                this.setState({isError: true})
-            })
+        await this.handleLogin(login, password)
         this.setState({isLoading: false})
     }
 
     render() {
-        const {isLoggedIn, isError, isLoading} = this.state
+        const {isAuthenticated, isError, isLoading} = this.state
         if (isLoading) {
             return (
                 <Segment basic style={{marginTop: window.innerHeight / 3}}>
@@ -65,7 +69,7 @@ class Login extends Component {
                     </Dimmer>
                 </Segment>
             )
-        } else if (isLoggedIn) {
+        } else if (isAuthenticated) {
             return <Navigate to={'/'}/>
         } else {
             return (
@@ -78,7 +82,7 @@ class Login extends Component {
                             <Form.Input
                                 fluid
                                 autoFocus
-                                name='email'
+                                name='login'
                                 icon='user'
                                 iconPosition='left'
                                 placeholder='Логин'

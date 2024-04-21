@@ -3,7 +3,7 @@ import {Navigate} from 'react-router-dom'
 import {Container} from 'semantic-ui-react'
 import AdvertList from './AdvertList'
 import AuthContext from '../auth/AuthContext'
-import {advertApi} from '../util/AdvertApi'
+import {advertApi} from '../api/AdvertApi'
 import {handleLogError} from '../util/ErrorHandler'
 
 class AdvertsPage extends Component {

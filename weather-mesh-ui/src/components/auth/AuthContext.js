@@ -1,52 +1,42 @@
-import React, {Component, useContext} from 'react'
+import React, {createContext, useState} from 'react';
 
-const AuthContext = React.createContext()
+const AuthContext = createContext(null);
 
-class AuthProvider extends Component {
-    state = {
-        user: null
-    }
+export const useCreateAppContext = () => {
+    const [isUserAuthenticated, setIsUserAuthenticated] = useState(
+        localStorage.getItem("token") !== null &&
+        localStorage.getItem("role") !== 'UNAUTHORIZED'
+    );
 
-    componentDidMount() {
-        const user = localStorage.getItem('user')
-        this.setState({user})
-    }
+    const userLogin = (token, login, role) => {
+        localStorage.setItem("token", token)
+        localStorage.setItem("login", login)
+        localStorage.setItem("role", role)
+        setIsUserAuthenticated(true)
+    };
 
-    getUser = () => {
-        return JSON.parse(localStorage.getItem('user'))
-    }
+    const userLogout = () => {
+        localStorage.removeItem("token")
+        localStorage.setItem("login", 'unknown')
+        localStorage.setItem("role", 'UNAUTHORIZED')
+        setIsUserAuthenticated(false)
+    };
 
-    userIsAuthenticated = () => {
-        return localStorage.getItem('user') !== null
-    }
+    const getToken = () => localStorage.getItem("token");
+    const getLogin = () => localStorage.getItem("login");
+    const getRole = () => localStorage.getItem("role");
 
-    userLogin = user => {
-        localStorage.setItem('user', JSON.stringify(user))
-        this.setState({user})
-    }
+    return {
+        userLogin, userLogout, getToken, getLogin, getRole, isUserAuthenticated
+    };
+};
 
-    userLogout = () => {
-        localStorage.removeItem('user')
-        this.setState({user: null})
-    }
+export const AuthProvider = ({children, ...props}) => {
+    const context = useCreateAppContext(props);
 
-    render() {
-        const {children} = this.props
-        const {user} = this.state
-        const {getUser, userIsAuthenticated, userLogin, userLogout} = this
-
-        return (
-            <AuthContext.Provider value={{user, getUser, userIsAuthenticated, userLogin, userLogout}}>
-                {children}
-            </AuthContext.Provider>
-        )
-    }
-}
+    return (<AuthContext.Provider value={context}>
+        {children}
+    </AuthContext.Provider>);
+};
 
 export default AuthContext
-
-export function useAuth() {
-    return useContext(AuthContext)
-}
-
-export {AuthProvider}

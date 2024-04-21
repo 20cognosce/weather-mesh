@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {Navigate} from 'react-router-dom'
 import {Container} from 'semantic-ui-react'
 import AuthContext from '../auth/AuthContext'
-import {advertApi} from '../util/AdvertApi'
+import {advertApi} from '../api/AdvertApi'
 import AdminTab from './AdminTab'
 import {handleLogError} from '../util/ErrorHandler'
 
@@ -21,7 +21,7 @@ class AdminPage extends Component {
 
     componentDidMount() {
         const Auth = this.context
-        const user = Auth.getUser()
+        const user = Auth.getLogin()
         const isAdmin = user.role === 'ADMIN'
         this.setState({isAdmin})
 
@@ -35,7 +35,7 @@ class AdminPage extends Component {
 
     handleFindUsers = () => {
         const Auth = this.context
-        const user = Auth.getUser()
+        const user = Auth.getLogin()
 
         const email = this.state.userEmailToFind
         this.setState({isUsersLoading: true})
@@ -54,7 +54,7 @@ class AdminPage extends Component {
 
     handleFindAdverts = () => {
         const Auth = this.context
-        const user = Auth.getUser()
+        const user = Auth.getLogin()
 
         const title = this.state.advertTitleToFind
         this.setState({isAdvertsLoading: true})
@@ -73,7 +73,7 @@ class AdminPage extends Component {
 
     handleDeleteUser = (id) => {
         const Auth = this.context
-        const user = Auth.getUser()
+        const user = Auth.getLogin()
 
         this.setState({isUsersLoading: true})
         advertApi.deleteUser(user, id)
@@ -87,7 +87,7 @@ class AdminPage extends Component {
 
     handleActivateUser = (id) => {
         const Auth = this.context
-        const user = Auth.getUser()
+        const user = Auth.getLogin()
 
         this.setState({isUsersLoading: true})
         advertApi.activateUser(user, id)
@@ -105,7 +105,7 @@ class AdminPage extends Component {
 
     handleDeleteAdvert = (id) => {
         const Auth = this.context
-        const user = Auth.getUser()
+        const user = Auth.getLogin()
 
         this.setState({isAdvertsLoading: true})
         advertApi.deleteAdvert(user, id)

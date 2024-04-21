@@ -1,36 +1,31 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import {Link} from 'react-router-dom'
 import {Icon, Menu, MenuHeader, MenuItem, MenuMenu} from 'semantic-ui-react'
-import {useAuth} from '../auth/AuthContext'
+import AuthContext from '../auth/AuthContext'
 
 function Navbar() {
-    const {getUser, userIsAuthenticated, userLogout} = useAuth()
+    const {getLogin, isUserAuthenticated, userLogout} = useContext(AuthContext)
 
-    const logout = () => {
+    const handleLogout = () => {
         userLogout()
     }
 
-    const enterMenuStyle = () => {
-        return userIsAuthenticated() ? {"display": "none"} : {"display": "block"}
+    const loginMenuStyle = () => {
+        return isUserAuthenticated ? {"display": "none"} : {"display": "block"}
     }
 
     const logoutMenuStyle = () => {
-        return userIsAuthenticated() ? {"display": "block"} : {"display": "none"}
+        return isUserAuthenticated ? {"display": "block"} : {"display": "none"}
     }
 
     const adminPageStyle = () => {
-        const user = getUser()
+        const user = getLogin()
         return user && user.role === 'ADMIN' ? {"display": "block"} : {"display": "none"}
     }
 
     const userPageStyle = () => {
-        const user = getUser()
+        const user = getLogin()
         return user && user.role === 'USER' ? {"display": "block"} : {"display": "none"}
-    }
-
-    const getUserFirstName = () => {
-        const user = getUser()
-        return user ? user.firstName : ''
     }
 
     return (
@@ -38,11 +33,11 @@ function Navbar() {
             <MenuItem>
                 <MenuHeader>Авторизация</MenuHeader>
                 <MenuMenu>
-                    <Menu.Item as={Link} to="/login" style={enterMenuStyle()}>
+                    <Menu.Item as={Link} to="/login" style={loginMenuStyle()}>
                         <Icon name='sign in'/>
                         Войти в систему
                     </Menu.Item>
-                    <Menu.Item as={Link} to="/" style={logoutMenuStyle()} onClick={logout}>
+                    <Menu.Item as={Link} to="/" style={logoutMenuStyle()} onClick={handleLogout}>
                         <Icon name='sign out'/>
                         Выйти из системы
                     </Menu.Item>
@@ -60,7 +55,7 @@ function Navbar() {
             <MenuItem>
                 <MenuHeader>Сервис управления трафиком</MenuHeader>
                 <MenuMenu>
-                    <Menu.Item as={Link} exact='true' to="/" >
+                    <Menu.Item as={Link} exact='true' to="/">
                         <Icon name='unlock'/>
                         Управление доступами
                     </Menu.Item>
@@ -88,7 +83,7 @@ function Navbar() {
                 <MenuHeader>Дополнительно</MenuHeader>
                 <MenuMenu>
                     <Menu.Item>
-                        <Icon name='settings'/>
+                        <Icon name='info'/>
                         О системе
                     </Menu.Item>
                     <Menu.Item>

@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {Container, Dimmer, Grid, Loader, Segment} from 'semantic-ui-react'
-import {advertApi} from '../util/AdvertApi'
 import {handleLogError} from '../util/ErrorHandler'
 import Navbar from "./Navbar";
 import HomeHeader from "./HomeHeader";
@@ -13,13 +12,13 @@ class Home extends Component {
     async componentDidMount() {
         this.setState({isLoading: true})
         try {
-            let response = await advertApi.getUsersCount()
-            const usersCount = response.data
-
-            response = await advertApi.getAdvertsCount()
-            const advertsCount = response.data
-
-            this.setState({usersCount, advertsCount})
+            // let response = await advertApi.getUsersCount()
+            // const usersCount = response.data
+            //
+            // response = await advertApi.getAdvertsCount()
+            // const advertsCount = response.data
+            //
+            // this.setState({usersCount, advertsCount})
         } catch (error) {
             handleLogError(error)
         } finally {

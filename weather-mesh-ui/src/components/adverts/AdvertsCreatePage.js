@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {Navigate} from 'react-router-dom'
 import {Button, Dimmer, Form, Grid, Header, Loader, Message, Segment} from 'semantic-ui-react'
 import AuthContext from '../auth/AuthContext'
-import {advertApi} from "../util/AdvertApi";
+import {advertApi} from "../api/AdvertApi";
 import {handleLogError} from "../util/ErrorHandler";
 
 class AdvertsCreatePage extends Component {
@@ -27,7 +27,7 @@ class AdvertsCreatePage extends Component {
 
     componentDidMount() {
         const Auth = this.context
-        const user = Auth.getUser()
+        const user = Auth.getLogin()
         const isUser = user.role === 'USER'
         const userId = user.id
 
@@ -69,7 +69,7 @@ class AdvertsCreatePage extends Component {
 
     async handleCreateAdvert() {
         const Auth = this.context
-        const user = Auth.getUser()
+        const user = Auth.getLogin()
         const advert = this.getBuiltAdvert(user.id)
 
         await advertApi.createAdvert(user, advert)
@@ -80,7 +80,7 @@ class AdvertsCreatePage extends Component {
 
     handleUploadImage(advertId) {
         const Auth = this.context
-        const user = Auth.getUser()
+        const user = Auth.getLogin()
         const image = this.state.image
 
         advertApi.uploadImage(user, image, advertId)
