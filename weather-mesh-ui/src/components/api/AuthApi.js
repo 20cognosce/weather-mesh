@@ -2,11 +2,18 @@ import axios from 'axios'
 import {config} from '../util/HostResolver'
 
 export const authApi = {
-    getToken,
+    getHealth,
+    postToken,
     getAccount
 }
 
-function getToken(login, password) {
+function getHealth() {
+    return axiosInstanceOrigin.get(
+        '/actuator/health'
+    )
+}
+
+function postToken(login, password) {
     return axiosInstance.post(
         '/token',
         {login, password}
@@ -16,10 +23,14 @@ function getToken(login, password) {
 function getAccount(token) {
     return axiosInstance.get(
         '/account',
-        { headers: {"Authorization" : `${token}`} }
+        {headers: {"Authorization": `${token}`}}
     )
 }
 
 const axiosInstance = axios.create({
-    baseURL: config.AUTH_BASE_URL
+    baseURL: config.AUTH_ORIGIN + '/auth'
+})
+
+const axiosInstanceOrigin = axios.create({
+    baseURL: config.AUTH_ORIGIN
 })

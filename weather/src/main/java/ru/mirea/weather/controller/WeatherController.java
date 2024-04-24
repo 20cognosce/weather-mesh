@@ -3,6 +3,7 @@ package ru.mirea.weather.controller;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import ru.mirea.dto.DictionaryRequestDto;
 import ru.mirea.dto.DictionaryResponseDto;
 import ru.mirea.service.UtilService;
 
+@CrossOrigin
 @RequestMapping("/weather")
 @RestController
 public class WeatherController {
@@ -41,6 +43,8 @@ public class WeatherController {
                 .header("request-to", "dictionary")
                 .body(requestDto)
                 .retrieve()
+                .onStatus(status -> status.value() == 400, (request, response) -> {
+                })
                 .body(DictionaryResponseDto.class);
 
         return ResponseEntity.ok(dictionaryServiceResponse);

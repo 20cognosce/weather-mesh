@@ -3,8 +3,8 @@ import {Link} from 'react-router-dom'
 import {Icon, Menu, MenuHeader, MenuItem, MenuMenu} from 'semantic-ui-react'
 import AuthContext from '../auth/AuthContext'
 
-function Navbar() {
-    const {getLogin, isUserAuthenticated, userLogout} = useContext(AuthContext)
+function LayoutNavbar() {
+    const {isUserAuthenticated, userLogout} = useContext(AuthContext)
 
     const handleLogout = () => {
         userLogout()
@@ -16,16 +16,6 @@ function Navbar() {
 
     const logoutMenuStyle = () => {
         return isUserAuthenticated ? {"display": "block"} : {"display": "none"}
-    }
-
-    const adminPageStyle = () => {
-        const user = getLogin()
-        return user && user.role === 'ADMIN' ? {"display": "block"} : {"display": "none"}
-    }
-
-    const userPageStyle = () => {
-        const user = getLogin()
-        return user && user.role === 'USER' ? {"display": "block"} : {"display": "none"}
     }
 
     return (
@@ -44,53 +34,48 @@ function Navbar() {
                 </MenuMenu>
             </MenuItem>
             <MenuItem>
-                <MenuHeader>Сервис погоды</MenuHeader>
+                <MenuHeader>Погода</MenuHeader>
                 <MenuMenu>
-                    <Menu.Item as={Link} to="/home">
+                    <Menu.Item as={Link} to="/weather">
                         <Icon name='search'/>
                         Поиск
                     </Menu.Item>
                 </MenuMenu>
             </MenuItem>
             <MenuItem>
-                <MenuHeader>Сервис управления трафиком</MenuHeader>
+                <MenuHeader>Управление трафиком</MenuHeader>
                 <MenuMenu>
-                    <Menu.Item as={Link} exact='true' to="/">
+                    <Menu.Item as={Link} to="/permissions">
                         <Icon name='unlock'/>
                         Управление доступами
                     </Menu.Item>
 
-                    <Menu.Item as={Link} exact='true' to="/">
+                    <Menu.Item as={Link} to="/history">
                         <Icon name='file alternate'/>
                         История запросов
                     </Menu.Item>
-                    <Menu.Item as={Link} exact='true' to="/">
+                    <Menu.Item as={Link} to="/systems">
                         <Icon name='shutdown'/>
                         Системы
                     </Menu.Item>
-                    <Menu.Item as={Link} exact='true' to="/">
+                    <Menu.Item as={Link} to="/audit">
                         <Icon name='shield'/>
                         Аудит
                     </Menu.Item>
-
-
-                    {/*<Menu.Item as={Link} to="/admin" style={adminPageStyle()}>Администрирование</Menu.Item>*/}
-                    {/*<Menu.Item as={Link} to="/adverts" style={userPageStyle()}>Объявления</Menu.Item>*/}
-                    {/*<Menu.Item as={Link} to="/adverts/new" style={userPageStyle()}>Разместить свое объявление</Menu.Item>*/}
                 </MenuMenu>
             </MenuItem>
             <MenuItem>
                 <MenuHeader>Дополнительно</MenuHeader>
                 <MenuMenu>
-                    <Menu.Item>
-                        <Icon name='info'/>
+                    <Menu.Item as={Link} to="/about">
+                        <Icon name='info circle'/>
                         О системе
                     </Menu.Item>
-                    <Menu.Item>
+                    <Menu.Item as={Link} to="/author">
                         <Icon name='id card'/>
                         Об авторе
                     </Menu.Item>
-                    <Menu.Item>
+                    <Menu.Item as={Link} to="/links">
                         <Icon name='globe'/>
                         Ссылки
                     </Menu.Item>
@@ -100,4 +85,4 @@ function Navbar() {
     )
 }
 
-export default Navbar
+export default LayoutNavbar

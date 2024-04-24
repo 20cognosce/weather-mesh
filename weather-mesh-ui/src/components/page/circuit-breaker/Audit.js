@@ -1,0 +1,80 @@
+import React, {useContext, useEffect, useState} from 'react'
+import {Button, Container, Modal, ModalActions, ModalContent, ModalHeader, Segment, Table} from 'semantic-ui-react'
+import {circuitBreakerApi} from "../../api/CircuitBreakerApi";
+import {handleLogError} from "../../util/ErrorHandler";
+import AuthContext from "../../auth/AuthContext";
+import {Link} from "react-router-dom";
+import Pagination from "./Pagination";
+
+export default function Audit() {
+    const {getRole, getToken} = useContext(AuthContext)
+    const [audit, setAudit] = useState([]);
+    const [getCurrentEntities, render] = Pagination(audit, 5)
+
+    const fetchData = async () => {
+        try {
+            const circuitBreakerResponse = await circuitBreakerApi.getAudit(getToken());
+            setAudit(circuitBreakerResponse.data);
+        } catch (error) {
+            handleLogError(error);
+        }
+    }
+
+    useEffect(() => {
+        fetchData()
+    }, []);
+
+    if ('ADMIN' !== getRole()) {
+        return (
+            <div>
+                <Modal open='true'>
+                    <ModalHeader>Не пройдена проверка соответствия прав</ModalHeader>
+                    <ModalContent>
+                        Только пользователи с ролью <b>ADMIN</b> могут просматривать события аудита
+                    </ModalContent>
+                    <ModalActions>
+                        <Button positive as={Link} to="/">
+                            Ясно
+                        </Button>
+                    </ModalActions>
+                </Modal>
+            </div>
+        )
+    } else {
+        return (
+            <Container>
+                <Segment inverted>
+                    <h3 style={{textAlign: 'center'}}> События аудита </h3>
+                </Segment>
+
+                <Table celled inverted style={{fontWeight: 'bolder', background: '#1B1C1D'}}>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell>ID</Table.HeaderCell>
+                            <Table.HeaderCell>From</Table.HeaderCell>
+                            <Table.HeaderCell>To</Table.HeaderCell>
+                            <Table.HeaderCell>Old status</Table.HeaderCell>
+                            <Table.HeaderCell>New status</Table.HeaderCell>
+                            <Table.HeaderCell>Username</Table.HeaderCell>
+                            <Table.HeaderCell>Timestamp</Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        {getCurrentEntities.map(event => (
+                            <Table.Row key={event.id}>
+                                <Table.Cell width={3}>{event.id}</Table.Cell>
+                                <Table.Cell width={2}>{event.fromSystem}</Table.Cell>
+                                <Table.Cell width={2}>{event.toSystem}</Table.Cell>
+                                <Table.Cell width={2}>{event.oldStatus}</Table.Cell>
+                                <Table.Cell width={2}>{event.newStatus}</Table.Cell>
+                                <Table.Cell width={2}>{event.username}</Table.Cell>
+                                <Table.Cell width={3}>{event.timestamp.replace('T', ' ')}</Table.Cell>
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                    {render}
+                </Table>
+            </Container>
+        );
+    }
+}

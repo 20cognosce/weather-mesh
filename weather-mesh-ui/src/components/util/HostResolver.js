@@ -1,13 +1,13 @@
 const prod = {
-    WEATHER_BASE_URL: 'http://localhost:8080/weather',
-    CIRCUIT_BREAKER_BASE_URL: 'http://localhost:8082/circuit-breaker',
-    AUTH_BASE_BASE_URL: process.env.AUTH_BASE_URL
+    WEATHER_ORIGIN: 'http://localhost:8080',
+    CIRCUIT_BREAKER_ORIGIN: 'http://localhost:8082',
+    AUTH_ORIGIN: process.env.AUTH_BASE_URL
 }
 
 const dev = {
-    WEATHER_BASE_URL: 'http://localhost:8080/weather',
-    CIRCUIT_BREAKER_BASE_URL: 'http://localhost:8082/circuit-breaker',
-    AUTH_BASE_URL: 'http://localhost:8083/auth'
+    WEATHER_ORIGIN: 'http://localhost:8080',
+    CIRCUIT_BREAKER_ORIGIN: 'http://localhost:8082',
+    AUTH_ORIGIN: 'http://localhost:8083'
 }
 
-export const config = process.env.NODE_ENV === 'development' ? dev : dev
+export const config = process.env.NODE_ENV === 'dev' ? dev : dev

@@ -17,6 +17,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AuditDto {
     private UUID id;
+    private String fromSystem;
+    private String toSystem;
     private StatusValue oldStatus;
     private StatusValue newStatus;
     private String username;

@@ -2,7 +2,7 @@ package ru.mirea.auth.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import lombok.SneakyThrows;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.mirea.auth.Role;
@@ -11,31 +11,18 @@ import ru.mirea.dto.AuthResponseDto;
 import ru.mirea.service.UtilService;
 
 import javax.crypto.SecretKey;
-import java.security.MessageDigest;
-import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
+@AllArgsConstructor
 @Component
 public class JwtTokenProvider {
-
+    private final AccountRegistry accountRegistry;
+    private final HashManager hashManager;
     private final SecretKey key = Jwts.SIG.HS512.key().build();
-    private final byte[] salt = new byte[16];
-    private final Map<String, String> accounts;
-
-    public JwtTokenProvider() {
-        new SecureRandom().nextBytes(salt);
-        this.accounts = Map.of(
-                Account.USER.getLogin(), this.hash(UtilService.readPassword()),
-                Account.ADMIN.getLogin(), this.hash(UtilService.readPassword()),
-                Account.WEATHER.getLogin(), this.hash(UtilService.readPassword()),
-                Account.CIRCUIT_BREAKER.getLogin(), this.hash(UtilService.readPassword())
-        );
-    }
 
     public AuthResponseDto getAuthFromToken(String token) {
         try {
@@ -56,8 +43,8 @@ public class JwtTokenProvider {
 
     public String generateToken(AuthRequestDto authRequestDto) {
         var login = authRequestDto.getLogin();
-        var hash = accounts.get(login);
-        var calculatedHash = hash(UtilService.base64ToByteArray(authRequestDto.getPassword()));
+        var hash = accountRegistry.getAccountByLogin(login).hash();
+        var calculatedHash = hashManager.hash(UtilService.base64ToByteArray(authRequestDto.getPassword()));
 
         if (!Objects.equals(hash, calculatedHash)) {
             return Jwts.builder()
@@ -68,7 +55,7 @@ public class JwtTokenProvider {
                     .compact();
         }
 
-        Role role = Account.getAccountByLogin(login).getRole();
+        Role role = accountRegistry.getAccountByLogin(login).role();
         return Jwts.builder()
                 .subject(authRequestDto.getLogin())
                 .claim("role", role)
@@ -84,14 +71,5 @@ public class JwtTokenProvider {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-    }
-
-    @SneakyThrows
-    private String hash(byte[] password) {
-        MessageDigest digest = MessageDigest.getInstance("SHA-512");
-        digest.update(salt);
-        byte[] hash = digest.digest(password);
-
-        return UtilService.byteArrayToBase64(hash);
     }
 }

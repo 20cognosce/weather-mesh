@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Navigate} from 'react-router-dom'
 import {Button, Container, Dimmer, Form, Loader, Message, Segment} from 'semantic-ui-react'
-import AuthContext from './AuthContext'
+import AuthContext from '../auth/AuthContext'
 import {authApi} from '../api/AuthApi'
 import {handleLogError} from '../util/ErrorHandler'
 
@@ -28,7 +28,7 @@ class Login extends Component {
 
     handleLogin = async (login, password) => {
         try {
-            const tokenResponse = await authApi.getToken(login, window.btoa(password));
+            const tokenResponse = await authApi.postToken(login, window.btoa(password));
             const token = tokenResponse.data;
 
             const accountResponse = await authApi.getAccount(token);
@@ -79,6 +79,7 @@ class Login extends Component {
                           onSubmit={this.handleSubmit}>
                         <Segment style={{minWidth: 500}} inverted>
                             <h3 style={{display: 'flex', justifyContent: 'center'}}> Введите свои учетные данные </h3>
+                            <br/>
                             <Form.Input
                                 fluid
                                 autoFocus

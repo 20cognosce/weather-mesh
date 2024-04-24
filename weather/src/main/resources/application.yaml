@@ -6,3 +6,12 @@ spring:
     default: dev
   application:
     name: weather
+
+# cross-origin for actuator
+management:
+  endpoints:
+    web:
+      cors:
+        allowed-origins: '*'
+        allowed-methods: GET
+        allowed-headers: '*'

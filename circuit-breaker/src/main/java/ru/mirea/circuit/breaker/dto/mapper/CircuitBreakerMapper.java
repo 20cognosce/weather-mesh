@@ -1,5 +1,6 @@
 package ru.mirea.circuit.breaker.dto.mapper;
 
+import org.springframework.lang.NonNull;
 import ru.mirea.circuit.breaker.dto.AuditDto;
 import ru.mirea.circuit.breaker.dto.CircuitBreakerRequestDto;
 import ru.mirea.circuit.breaker.dto.PermissionDto;
@@ -14,6 +15,8 @@ public class CircuitBreakerMapper {
     public static AuditDto mapAuditToDto(Audit audit) {
         return AuditDto.builder()
                 .id(audit.getId())
+                .fromSystem(audit.getPermission().getRequestFromSystem().getName())
+                .toSystem(audit.getPermission().getRequestToSystem().getName())
                 .oldStatus(audit.getOldStatus().getValue())
                 .newStatus(audit.getNewStatus().getValue())
                 .username(audit.getUsername())
@@ -40,7 +43,11 @@ public class CircuitBreakerMapper {
                 .build();
     }
 
-    public static PermissionDto mapPermissionToDto(Permission permission) {
+    public static PermissionDto mapPermissionToDto(@NonNull Permission permission) {
+        if (permission.getId() == null) {
+            return new PermissionDto();
+        }
+
         return PermissionDto.builder()
                 .id(permission.getId())
                 .requestFromSystem(permission.getRequestFromSystem().getName())
