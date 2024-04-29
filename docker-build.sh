@@ -19,3 +19,8 @@ rm Dockerfile
 cp ./auth/Dockerfile .
 docker build . -t auth-image
 rm Dockerfile
+
+# ui stage
+cp ./weather-mesh-ui/Dockerfile .
+docker build . -t node-image
+rm Dockerfile

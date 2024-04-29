@@ -1,14 +1,14 @@
-FROM node:18.14.0
+FROM node:22.0.0
 
-WORKDIR /home/advertapp-ui
-COPY ui .
+WORKDIR /weather-mesh/weather-mesh-ui
+COPY /weather-mesh-ui/public ./public
+COPY /weather-mesh-ui/src ./src
+COPY /weather-mesh-ui/package.json ./package.json
+COPY /weather-mesh-ui/package-lock.json ./package-lock.json
+
 RUN npm ci
 RUN npm install -g serve
-
-ARG BACKEND_BASE_URI
-ENV REACT_APP_BACKEND_BASE_URI $BACKEND_BASE_URI
-
 RUN npm run build
 
 EXPOSE 3000
-CMD [ "npx", "serve", "-n", "build" ]
+ENTRYPOINT serve -s build

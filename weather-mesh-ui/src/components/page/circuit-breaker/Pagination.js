@@ -15,6 +15,10 @@ export default function Pagination(entitiesArray, entitiesPerPage) {
     }
 
     function render() {
+        if (entitiesArray.length < entitiesPerPage) {
+            return
+        }
+
         return (
             <Table.Footer>
                 <Table.Row>

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Container, Segment} from 'semantic-ui-react'
+import {Container, Grid, Segment} from 'semantic-ui-react'
 
 export default function Author() {
     return (
@@ -9,13 +9,56 @@ export default function Author() {
             </Segment>
 
             <Segment inverted>
-                Верт Дмитрий Андреевич — разработчик проекта
-                <br/>
-                <br/>
-                Студент 4-ого курса, группы ИКБО-24-20, направления «Программная инженерия», профиля «Разработка программных продуктов и проектирование информационных систем»
-                <br/>
-                <br/>
-                ФГБУ ВО «МИРЭА — Российский технологический университет»
+                <Grid columns={2} divided relaxed inverted>
+                    <Grid.Row>
+                        <Grid.Column width={3} verticalAlign='middle'>
+                            <strong>Разработчик</strong>
+                        </Grid.Column>
+                        <Grid.Column width={13}>
+                            Верт Дмитрий Андреевич
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column width={3} verticalAlign='middle'>
+                            <strong>Курс</strong>
+                        </Grid.Column>
+                        <Grid.Column width={13}>
+                            4-ый
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column width={3} verticalAlign='middle'>
+                            <strong>Группа</strong>
+                        </Grid.Column>
+                        <Grid.Column width={13}>
+                            ИКБО-24-20
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column width={3} verticalAlign='middle'>
+                            <strong>Направление</strong>
+                        </Grid.Column>
+                        <Grid.Column width={13}>
+                            09.03.04 «Программная инженерия»
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column width={3} verticalAlign='middle'>
+                            <strong>Профиль</strong>
+                        </Grid.Column>
+                        <Grid.Column width={13}>
+                            «Разработка программных продуктов и проектирование информационных систем»
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column width={3} verticalAlign='middle'>
+                            <strong>ВУЗ</strong>
+                        </Grid.Column>
+                        <Grid.Column width={13}>
+                            ФГБОУ ВО «МИРЭА — Российский технологический университет»
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
             </Segment>
         </Container>
     );

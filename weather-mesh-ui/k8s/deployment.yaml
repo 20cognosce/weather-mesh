@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-deployment
+  labels:
+    app: node-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-app
+  template:
+    metadata:
+      labels:
+        app: node-app
+    spec:
+      containers:
+        - name: node-container
+          image: cognosce/node-image
+          ports:
+              - containerPort: 3000
+          env:
+            - name: GATEWAY_IP
+              value: $(kubectl get svc istio-ingressgateway -n istio-system | grep istio-ingressgateway | awk '{print $4}')
+            - name: NODE_PROFILE
+              value: prod
+
