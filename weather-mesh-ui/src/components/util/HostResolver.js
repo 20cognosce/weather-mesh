@@ -1,7 +1,7 @@
 const prod = {
-    WEATHER_ORIGIN: process.env.GATEWAY_IP,
-    CIRCUIT_BREAKER_ORIGIN: process.env.GATEWAY_IP,
-    AUTH_ORIGIN: process.env.GATEWAY_IP
+    WEATHER_ORIGIN: process.env.REACT_APP_GATEWAY_IP,
+    CIRCUIT_BREAKER_ORIGIN: process.env.REACT_APP_GATEWAY_IP,
+    AUTH_ORIGIN: process.env.REACT_APP_GATEWAY_IP
 }
 
 const dev = {
@@ -10,4 +10,4 @@ const dev = {
     AUTH_ORIGIN: 'http://localhost:8083'
 }
 
-export const config = process.env.NODE_PROFILE === 'prod' ? prod : dev
+export const config = process.env.REACT_APP_PROFILE === 'prod' ? prod : dev

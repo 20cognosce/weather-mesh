@@ -20,8 +20,7 @@ spec:
           ports:
               - containerPort: 3000
           env:
-            - name: GATEWAY_IP
-              value: $(kubectl get svc istio-ingressgateway -n istio-system | grep istio-ingressgateway | awk '{print $4}')
-            - name: NODE_PROFILE
+            - name: REACT_APP_GATEWAY_IP
+              value: 10.101.6.80
+            - name: REACT_APP_PROFILE
               value: prod
-

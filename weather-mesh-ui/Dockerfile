@@ -7,8 +7,6 @@ COPY /weather-mesh-ui/package.json ./package.json
 COPY /weather-mesh-ui/package-lock.json ./package-lock.json
 
 RUN npm ci
-RUN npm install -g serve
-RUN npm run build
 
 EXPOSE 3000
-ENTRYPOINT serve -s build
+ENTRYPOINT npm start

@@ -69,7 +69,7 @@ export default function Permissions() {
                                         color='blue'
                                         size='medium'
                                         icon='cog'
-                                        as={Link} to={`/permissions/edit?id=${permission.id}`}
+                                        as={Link} to={`ui/permissions/edit?id=${permission.id}`}
                                     />
                                 </Table.Cell>
                             </Table.Row>

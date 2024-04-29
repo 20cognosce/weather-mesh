@@ -9,3 +9,6 @@ kubectl apply -f circuit-breaker/k8s/service.yaml
 
 kubectl apply -f auth/k8s/deployment.yaml
 kubectl apply -f auth/k8s/service.yaml
+
+kubectl apply -f weather-mesh-ui/k8s/deployment.yaml
+kubectl apply -f weather-mesh-ui/k8s/service.yaml

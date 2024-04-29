@@ -8,7 +8,7 @@
 
 > minikube start --cpus 8 --memory 8192
 > 
-<i>loadbalancer necessary for ingress, execute in separate terminal</i>
+<i>loadbalancer necessary for istio ingress gateway, execute in separate terminal</i>
 > minikube tunnel
 >
 <i>applying app manifests</i>
