@@ -8,7 +8,7 @@ export const authApi = {
 }
 
 function getHealth() {
-    return axiosInstanceOrigin.get(
+    return axiosInstance.get(
         '/actuator/health'
     )
 }
@@ -29,8 +29,4 @@ function getAccount(token) {
 
 const axiosInstance = axios.create({
     baseURL: config.AUTH_ORIGIN + '/auth'
-})
-
-const axiosInstanceOrigin = axios.create({
-    baseURL: config.AUTH_ORIGIN
 })

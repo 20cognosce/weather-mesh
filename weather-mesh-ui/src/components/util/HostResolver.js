@@ -1,7 +1,7 @@
 const prod = {
-    WEATHER_ORIGIN: process.env.REACT_APP_GATEWAY_IP,
-    CIRCUIT_BREAKER_ORIGIN: process.env.REACT_APP_GATEWAY_IP,
-    AUTH_ORIGIN: process.env.REACT_APP_GATEWAY_IP
+    WEATHER_ORIGIN: 'http://' + process.env.REACT_APP_GATEWAY_IP,
+    CIRCUIT_BREAKER_ORIGIN: 'http://' + process.env.REACT_APP_GATEWAY_IP,
+    AUTH_ORIGIN: 'http://' + process.env.REACT_APP_GATEWAY_IP
 }
 
 const dev = {

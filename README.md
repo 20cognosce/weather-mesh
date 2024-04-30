@@ -1,3 +1,5 @@
+![app architecture](weather-mesh-ui/public/AppArchitecture.jpg)
+
 <h2> Docker build & push </h2>
 
 > bash docker-build.sh
@@ -22,3 +24,8 @@
 > 
 <i>and finally (needs restart of all pods for istio-proxy injection)</i>
 > bash istio-apply.sh
+> 
+<i>Do not forget to specify Istio Ingress IP address in weather-mesh-ui/deployment.yaml and rerun kube-apply.sh</i>
+- env:
+- - name: REACT_APP_GATEWAY_IP
+- - value: < IP > (default is 10.96.145.27)

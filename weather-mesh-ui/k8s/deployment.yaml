@@ -21,6 +21,6 @@ spec:
               - containerPort: 3000
           env:
             - name: REACT_APP_GATEWAY_IP
-              value: 10.101.6.80
+              value: 10.96.145.27
             - name: REACT_APP_PROFILE
               value: prod

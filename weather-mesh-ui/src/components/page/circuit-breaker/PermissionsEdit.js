@@ -56,7 +56,7 @@ export default function PermissionsEdit() {
     if ('ADMIN' !== getRole()) {
         return (
             <div>
-                <Modal open='true'>
+                <Modal open>
                     <ModalHeader>Не пройдена проверка соответствия прав</ModalHeader>
                     <ModalContent>
                         Только пользователи с ролью <b>ADMIN</b> могут редактировать доступы

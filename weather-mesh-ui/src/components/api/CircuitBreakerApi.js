@@ -12,7 +12,7 @@ export const circuitBreakerApi = {
 }
 
 function getHealth() {
-    return axiosInstanceOrigin.get(
+    return axiosInstance.get(
         '/actuator/health'
     )
 }
@@ -62,8 +62,4 @@ function patchPermissionById(token, patchPermissionDto) {
 
 const axiosInstance = axios.create({
     baseURL: config.CIRCUIT_BREAKER_ORIGIN + '/circuit-breaker'
-})
-
-const axiosInstanceOrigin = axios.create({
-    baseURL: config.CIRCUIT_BREAKER_ORIGIN
 })

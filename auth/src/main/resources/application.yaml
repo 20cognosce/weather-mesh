@@ -11,6 +11,7 @@ spring:
 management:
   endpoints:
     web:
+      base-path: /auth/actuator
       cors:
         allowed-origins: '*'
         allowed-methods: GET

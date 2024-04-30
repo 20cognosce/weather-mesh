@@ -23,7 +23,7 @@ import ru.mirea.dto.DictionaryResponseDto;
 import ru.mirea.service.UtilService;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.time.format.DateTimeFormatter;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -51,7 +51,8 @@ public class DictionaryProcessorController {
         String token = UtilService.getTokenFromAuthServiceLogin(authServiceHost, applicationName, applicationName, UtilService.readPassword());
 
         RequestProcessingResult processingResult = circuitBreakerService.tryProcessRequest(request);
-        if (!processingResult.getIsValid()) return ResponseEntity.of(ProblemDetail.forStatusAndDetail(BAD_REQUEST, processingResult.getDescription())).build();
+        if (!processingResult.getIsValid())
+            return ResponseEntity.of(ProblemDetail.forStatusAndDetail(BAD_REQUEST, processingResult.getDescription())).build();
         if (!processingResult.getIsAllowed()) return ResponseEntity.ok(generateCircuitBreakerResponseDto());
 
         var dictionaryServiceResponse = RestClient.create().post()
@@ -61,6 +62,8 @@ public class DictionaryProcessorController {
                 .header("request-to", "dictionary")
                 .body(requestDto)
                 .retrieve()
+                .onStatus(status -> status.value() == 400, (req, res) -> {
+                })
                 .body(DictionaryResponseDto.class);
 
         return ResponseEntity.ok(dictionaryServiceResponse);
@@ -82,6 +85,8 @@ public class DictionaryProcessorController {
                 .header("request-from", applicationName)
                 .header("request-to", "dictionary")
                 .retrieve()
+                .onStatus(status -> status.value() == 400, (req, res) -> {
+                })
                 .body(DictionaryOptionsDto.class);
 
         return ResponseEntity.ok(dictionaryServiceResponse);
@@ -92,7 +97,7 @@ public class DictionaryProcessorController {
                 .value(null)
                 .description(String.format(
                         "Сервис справочных данных временно недоступен. Запрос обработан сервисом управления трафика в %s",
-                        LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)))
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now())))
                 .build();
     }
 
@@ -101,7 +106,7 @@ public class DictionaryProcessorController {
                 .options(null)
                 .description(String.format(
                         "Сервис справочных данных временно недоступен. Запрос обработан сервисом управления трафика в %s",
-                        LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)))
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now())))
                 .build();
     }
 }

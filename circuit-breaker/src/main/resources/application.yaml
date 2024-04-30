@@ -21,6 +21,7 @@ spring:
 management:
   endpoints:
     web:
+      base-path: /circuit-breaker/actuator
       cors:
         allowed-origins: '*'
         allowed-methods: GET

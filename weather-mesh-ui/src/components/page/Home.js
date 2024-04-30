@@ -16,21 +16,21 @@ class Home extends Component {
         this.setState({isLoading: true})
         try {
             const authHealthResponse = await authApi.getHealth()
-            this.setState({authStatus: authHealthResponse.data})
+            this.setState({authStatus: {'status': authHealthResponse.data.status}})
         } catch (error) {
             this.setState({authStatus: {'status': 'DOWN'}})
         }
 
         try {
             const weatherHealthResponse = await weatherApi.getHealth()
-            this.setState({weatherStatus: weatherHealthResponse.data})
+            this.setState({weatherStatus: {'status': weatherHealthResponse.data.status}})
         } catch (error) {
             this.setState({weatherStatus: {'status': 'DOWN'}})
         }
 
         try {
             const circuitBreakerHealthResponse = await circuitBreakerApi.getHealth()
-            this.setState({circuitBreakerStatus: circuitBreakerHealthResponse.data})
+            this.setState({circuitBreakerStatus: {'status': circuitBreakerHealthResponse.data.status}})
         } catch (error) {
             this.setState({circuitBreakerStatus: {'status': 'DOWN'}})
         }

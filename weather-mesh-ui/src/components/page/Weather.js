@@ -19,6 +19,7 @@ export default function Weather() {
     const {getRole, getToken} = useContext(AuthContext)
     const [formData, setFormData] = useState({condition: '', month: '', city: ''});
     const [response, setResponse] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleInputChange = (e, {name, value}) => {
         setFormData({...formData, [name]: value});
@@ -26,12 +27,17 @@ export default function Weather() {
 
     const handleSubmit = async () => {
         try {
+            setIsLoading(true)
             const weatherInfoResponse = await weatherApi.postInfo(getToken(), formData);
             const info = weatherInfoResponse.data;
-            setResponse({
-                value: info.value,
-                description: info.description
-            });
+            setTimeout(
+                function () {
+                    setIsLoading(false)
+                    setResponse({
+                        value: info.value,
+                        description: info.description
+                    });
+                }, 250);
         } catch (error) {
             handleLogError(error);
         }
@@ -78,7 +84,7 @@ export default function Weather() {
     if ('USER' !== getRole()) {
         return (
             <div>
-                <Modal open='true'>
+                <Modal open>
                     <ModalHeader>Не пройдена проверка соответствия прав</ModalHeader>
                     <ModalContent>
                         Только пользователи с ролью <b>USER</b> могут выполнять поиск данных о погоде
@@ -99,10 +105,12 @@ export default function Weather() {
                 </Segment>
 
                 <Segment inverted>
-                    <Form onSubmit={handleSubmit} style={{textAlign: 'center'}}>
+                    <Form inverted onSubmit={handleSubmit} style={{textAlign: 'center', fontWeight: 'bolder'}}>
                         <Form.Group widths='equal'>
                             <Form.Field>
-                                <label>Условия погоды</label>
+                                <label style={{padding: '5px'}}>
+                                    <h4>Условия погоды</h4>
+                                </label>
                                 <Dropdown
                                     placeholder='Выберите условия'
                                     fluid
@@ -114,7 +122,9 @@ export default function Weather() {
                                 />
                             </Form.Field>
                             <Form.Field>
-                                <label>Месяц</label>
+                                <label style={{padding: '5px'}}>
+                                    <h4>Месяц</h4>
+                                </label>
                                 <Dropdown
                                     placeholder='Выберите месяц'
                                     fluid
@@ -126,7 +136,9 @@ export default function Weather() {
                                 />
                             </Form.Field>
                             <Form.Field>
-                                <label>Город</label>
+                                <label style={{padding: '5px'}}>
+                                    <h4>Город</h4>
+                                </label>
                                 <Dropdown
                                     placeholder='Выберите город'
                                     fluid
@@ -138,10 +150,13 @@ export default function Weather() {
                                 />
                             </Form.Field>
                         </Form.Group>
-                        <br/>
-                        <Button type='submit'
-                                style={{fontWeight: 'bolder', background: '#FFFFFF'}}>Поиск данных!</Button>
-                        <br/><br/>
+                        <div style={{padding: '10px'}}>
+                            <Button type='submit' color={"blue"}
+                                    style={{fontWeight: 'bolder', color: '#FFFFFF'}}
+                                    loading={isLoading}>
+                                Поиск!
+                            </Button>
+                        </div>
                     </Form>
                     {response && (
                         <Segment>

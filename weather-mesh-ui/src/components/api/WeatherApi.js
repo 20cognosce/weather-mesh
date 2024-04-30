@@ -8,7 +8,7 @@ export const weatherApi = {
 }
 
 function getHealth() {
-    return axiosInstanceOrigin.get(
+    return axiosInstance.get(
         '/actuator/health'
     )
 }
@@ -30,8 +30,4 @@ function postInfo(token, requestBody) {
 
 const axiosInstance = axios.create({
     baseURL: config.WEATHER_ORIGIN + '/weather'
-})
-
-const axiosInstanceOrigin = axios.create({
-    baseURL: config.WEATHER_ORIGIN
 })

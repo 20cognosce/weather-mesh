@@ -25,7 +25,7 @@ export default function Permissions() {
     if ('ADMIN' !== getRole()) {
         return (
             <div>
-                <Modal open='true'>
+                <Modal open>
                     <ModalHeader>Не пройдена проверка соответствия прав</ModalHeader>
                     <ModalContent>
                         Только пользователи с ролью <b>ADMIN</b> могут управлять доступами
@@ -69,7 +69,7 @@ export default function Permissions() {
                                         color='blue'
                                         size='medium'
                                         icon='cog'
-                                        as={Link} to={`ui/permissions/edit?id=${permission.id}`}
+                                        as={Link} to={`/permissions/edit?id=${permission.id}`}
                                     />
                                 </Table.Cell>
                             </Table.Row>
